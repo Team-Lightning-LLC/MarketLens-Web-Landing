@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MarketLens - Your Research Team, On-Demand</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -13,9 +14,24 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #1a1a1a;
+      color: #ffffff;
+      background: #0a1628;
       overflow: hidden;
       height: 100vh;
+      position: relative;
+    }
+
+    /* Subtle texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* Header */
@@ -24,99 +40,115 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 70px;
-      background: rgba(23, 42, 58, 0.98);
-      backdrop-filter: blur(10px);
+      height: 60px;
+      background: rgba(10, 22, 40, 0.95);
+      backdrop-filter: blur(20px);
       z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 60px;
+      padding: 0 48px;
     }
 
     .logo-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     .logo-text {
       font-size: 22px;
       font-weight: 700;
       color: white;
+      letter-spacing: -0.5px;
     }
 
     .logo-tagline {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.5);
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.4);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       margin-top: 2px;
     }
 
     .header-cta {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
-      padding: 10px 24px;
-      border-radius: 8px;
+      padding: 10px 26px;
+      border-radius: 7px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 14px;
-      transition: all 0.3s ease;
+      font-size: 13px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       border: none;
       cursor: pointer;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     }
 
     .header-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
     }
 
-    /* Main Layout */
-    .container {
+    /* Navigation Tabs */
+    .nav-tabs {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      height: 42px;
+      background: rgba(10, 22, 40, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
-      height: 100vh;
-      padding-top: 70px;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding: 0 48px;
+      z-index: 999;
     }
 
-    /* Left Navigation */
-    .nav-panel {
-      width: 200px;
-      background: #f9fafb;
-      border-right: 1px solid #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      padding: 40px 0;
-    }
-
-    .nav-item {
-      padding: 16px 30px;
-      font-size: 15px;
+    .nav-tab {
+      padding: 7px 20px;
+      font-size: 13px;
       font-weight: 500;
-      color: #6b7280;
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
-      transition: all 0.2s ease;
-      border-left: 3px solid transparent;
+      transition: all 0.3s ease;
+      border-radius: 5px;
+      position: relative;
       user-select: none;
     }
 
-    .nav-item:hover {
-      color: #2563eb;
-      background: rgba(37, 99, 235, 0.05);
+    .nav-tab:hover {
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .nav-item.active {
-      color: #2563eb;
-      background: rgba(37, 99, 235, 0.08);
-      border-left-color: #2563eb;
+    .nav-tab.active {
+      color: white;
+      background: rgba(59, 130, 246, 0.15);
       font-weight: 600;
     }
 
-    /* Content Stage */
-    .content-stage {
-      flex: 1;
-      position: relative;
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    }
+
+    /* Content Container */
+    .content-container {
+      position: absolute;
+      top: 102px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
     }
 
@@ -127,383 +159,600 @@
       right: 0;
       bottom: 0;
       opacity: 0;
-      transform: scale(0.95);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
-      padding: 60px 80px;
+      padding: 32px 48px;
       overflow-y: auto;
     }
 
     .content-view.active {
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0);
       pointer-events: all;
     }
 
-    /* Right Context Panel */
-    .context-panel {
-      width: 280px;
-      background: #f9fafb;
-      border-left: 1px solid #e5e7eb;
-      padding: 40px 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
+    /* Overview Section with Image Carousel */
+    .hero-image-section {
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
-    .context-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .context-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #6b7280;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .context-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: #2563eb;
-      margin-bottom: 4px;
-    }
-
-    .context-description {
-      font-size: 13px;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    .context-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .context-list li {
-      font-size: 13px;
-      color: #4b5563;
-      padding: 8px 0;
-      border-bottom: 1px solid #f3f4f6;
-    }
-
-    .context-list li:last-child {
-      border-bottom: none;
-    }
-
-    /* Content Sections */
-    .section-hero {
-      max-width: 800px;
-    }
-
-    .headline {
-      font-size: 56px;
-      font-weight: 900;
-      color: #1a1a1a;
-      line-height: 1.1;
+    .hero-carousel {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      border-radius: 16px;
+      overflow: hidden;
       margin-bottom: 24px;
     }
 
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(10, 22, 40, 0.4) 0%, rgba(10, 22, 40, 0.85) 100%);
+      z-index: 1;
+    }
+
+    .hero-text-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+
+    .hero-text-overlay h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      color: #ffffff;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-text-overlay p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 400;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .indicator:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .indicator.active {
+      background: rgba(59, 130, 246, 1);
+      width: 32px;
+      border-radius: 5px;
+    }
+
+    .hero-cta-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .info-cards-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
     .gradient-text {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      display: inline-block;
     }
 
-    .subheadline {
-      font-size: 20px;
-      color: #4b5563;
-      line-height: 1.7;
-      margin-bottom: 40px;
-    }
-
-    .cta-group {
+    .cta-buttons {
       display: flex;
-      gap: 16px;
-      margin-bottom: 60px;
+      gap: 12px;
+      justify-content: center;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
-      padding: 16px 40px;
-      border-radius: 10px;
+      padding: 10px 28px;
+      border-radius: 7px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 13px;
       display: inline-block;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       border: none;
       cursor: pointer;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(37, 99, 235, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(59, 130, 246, 0.5);
     }
 
     .btn-secondary {
-      background: white;
-      color: #2563eb;
-      padding: 16px 40px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      padding: 10px 28px;
+      border-radius: 7px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 13px;
       display: inline-block;
-      border: 2px solid #2563eb;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       transition: all 0.3s ease;
       cursor: pointer;
     }
 
     .btn-secondary:hover {
-      background: #f0f7ff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
-    .problem-statement {
-      background: #fef3c7;
-      border-left: 4px solid #f59e0b;
-      padding: 24px 30px;
-      border-radius: 8px;
-      margin-bottom: 24px;
-    }
 
-    .problem-statement h3 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #92400e;
-      margin-bottom: 8px;
-    }
-
-    .problem-statement p {
-      font-size: 16px;
-      color: #78350f;
-      line-height: 1.6;
-    }
-
-    .solution-statement {
-      background: #d1fae5;
-      border-left: 4px solid #10b981;
-      padding: 24px 30px;
-      border-radius: 8px;
-    }
-
-    .solution-statement h3 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #065f46;
-      margin-bottom: 8px;
-    }
-
-    .solution-statement p {
-      font-size: 16px;
-      color: #047857;
-      line-height: 1.6;
-    }
 
     /* Output Section */
-    .output-preview {
-      background: white;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-      max-width: 900px;
-      margin-bottom: 40px;
+    .output-section {
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .output-header {
-      background: #f9fafb;
-      padding: 16px 24px;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .output-badge {
-      background: #dbeafe;
-      color: #1d4ed8;
-      padding: 4px 12px;
-      border-radius: 6px;
+    .output-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .output-header p {
       font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.6);
     }
 
-    .output-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #4b5563;
+    /* Screenshot Carousel */
+    .screenshot-carousel {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .output-content {
-      padding: 30px;
-      max-height: 500px;
-      overflow-y: auto;
+    .screenshot-slide {
+      display: none;
+      width: 100%;
     }
 
-    .output-content h4 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-    }
-
-    .output-content p {
-      font-size: 15px;
-      color: #4b5563;
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-
-    .output-content ul {
-      margin-left: 20px;
-      margin-bottom: 16px;
-    }
-
-    .output-content li {
-      font-size: 15px;
-      color: #4b5563;
-      line-height: 1.7;
-      margin-bottom: 8px;
-    }
-
-    .citations {
-      background: #f9fafb;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 24px;
-    }
-
-    .citations h5 {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #6b7280;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .citation-item {
-      font-size: 13px;
-      color: #2563eb;
-      margin-bottom: 8px;
-      text-decoration: none;
+    .screenshot-slide.active {
       display: block;
     }
 
-    .citation-item:hover {
-      text-decoration: underline;
+    .screenshot-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+.screenshot-nav {
+  display: none;
+}
+
+   .screenshot-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.screenshot-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(107, 114, 128, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.screenshot-indicator:hover {
+  background: rgba(156, 163, 175, 0.7);
+  transform: scale(1.15);
+}
+.screenshot-indicator.active {
+  background: #3b82f6;
+  width: 36px;
+  border-radius: 7px;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.6);
+}
+
+    .output-footer {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px 0;
+    }
+
+    .output-footer p {
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .output-footer strong {
+      color: #ffffff;
+      font-weight: 700;
     }
 
     /* Process Section */
-    .process-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      margin-top: 40px;
+    .process-section {
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .process-step {
+    .section-header {
       text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-header p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .process-card {
+      text-align: center;
+      position: relative;
     }
 
     .step-number {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 24px;
-      font-weight: 700;
-      color: white;
-    }
-
-    .process-step h3 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-    }
-
-    .process-step p {
-      font-size: 15px;
-      color: #6b7280;
-      line-height: 1.6;
-    }
-
-    /* Proof Section */
-    .proof-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-      margin-top: 40px;
-    }
-
-    .proof-card {
-      background: white;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 30px;
-      transition: all 0.3s ease;
-    }
-
-    .proof-card:hover {
-      border-color: #2563eb;
-      box-shadow: 0 8px 30px rgba(37, 99, 235, 0.1);
-    }
-
-    .proof-card h4 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-    }
-
-    .proof-card p {
-      font-size: 14px;
-      color: #6b7280;
-      line-height: 1.6;
-    }
-
-    .proof-stat {
-      font-size: 36px;
+      margin: 0 auto 14px;
+      font-size: 20px;
       font-weight: 800;
-      color: #2563eb;
+      color: white;
+      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+      transition: all 0.4s ease;
+    }
+
+    .process-card:hover .step-number {
+      transform: scale(1.1);
+      box-shadow: 0 16px 50px rgba(59, 130, 246, 0.6);
+    }
+
+    .process-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
       margin-bottom: 8px;
     }
 
+    .process-card p {
+      font-size: 11px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .process-details {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .process-details h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .process-details p {
+      font-size: 11px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .proof-section {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .proof-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .proof-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .proof-stat {
+      font-size: 26px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
+    .proof-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    .proof-card p {
+      font-size: 10px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .alternatives {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .alternatives h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .alternatives p {
+      font-size: 11px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .alternatives p strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
     /* Start Section */
-    .start-cta {
-      max-width: 600px;
+    .start-section {
+      max-width: 800px;
       margin: 0 auto;
       text-align: center;
     }
 
-    .start-cta h2 {
-      font-size: 42px;
-      font-weight: 800;
-      color: #1a1a1a;
-      margin-bottom: 20px;
+    .start-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 10px;
       line-height: 1.2;
+      letter-spacing: -0.5px;
     }
 
-    .start-cta p {
-      font-size: 18px;
-      color: #6b7280;
-      margin-bottom: 40px;
+    .start-section p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 20px;
       line-height: 1.6;
+    }
+
+    .cta-large {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 12px 36px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-block;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 12px 48px rgba(59, 130, 246, 0.4);
+    }
+
+    .cta-large:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.6);
+    }
+
+    .cta-subtext {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 10px;
+    }
+
+    .trust-section {
+      margin-top: 36px;
+      text-align: center;
+    }
+
+    .trust-section h3 {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .trust-logos {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.3;
+    }
+
+    .trust-logos div {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .faq-section {
+      margin-top: 36px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .faq-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .faq-question {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    .faq-answer {
+      font-size: 10px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    /* Scrollbar Styling */
+    .content-view::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content-view::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .content-view::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .content-view::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.15);
     }
   </style>
 </head>
@@ -517,273 +766,331 @@
         <div class="logo-tagline">Powered by Vertesia</div>
       </div>
     </div>
-    <button class="header-cta" onclick="window.location.href='#start'">Start Researching</button>
+    <button class="header-cta" onclick="switchView('start')">Start Researching</button>
   </div>
 
-  <!-- Main Container -->
-  <div class="container">
-    
-    <!-- Left Navigation -->
-    <div class="nav-panel">
-      <div class="nav-item active" data-view="overview">Overview</div>
-      <div class="nav-item" data-view="output">The Output</div>
-      <div class="nav-item" data-view="process">How It Works</div>
-      <div class="nav-item" data-view="proof">Why It Matters</div>
-      <div class="nav-item" data-view="start">Get Started</div>
-    </div>
+  <!-- Horizontal Tabs -->
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-view="overview">Overview</div>
+    <div class="nav-tab" data-view="output">The Output</div>
+    <div class="nav-tab" data-view="process">The Process</div>
+    <div class="nav-tab" data-view="proof">The Difference</div>
+    <div class="nav-tab" data-view="start">Get Started</div>
+  </div>
 
-    <!-- Content Stage -->
-    <div class="content-stage">
-      
-      <!-- Overview View -->
-      <div class="content-view active" id="overview">
-        <div class="section-hero">
-          <h1 class="headline">Your Research Team, <span class="gradient-text">On-Demand</span></h1>
-          <p class="subheadline">Stop drowning in data. Get institutional-grade research that synthesizes 30+ sources into actionable intelligence—in 10 minutes, not 30 hours.</p>
+  <!-- Content Container -->
+  <div class="content-container">
+    
+    <!-- Overview View -->
+    <div class="content-view active" id="overview">
+      <div class="hero-image-section">
+        <div class="hero-carousel">
+          <!-- Image slides - REPLACE src URLs with your own images -->
+          <div class="hero-slide active">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&h=900&fit=crop" alt="Team collaboration">
+          </div>
+          <div class="hero-slide">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&h=900&fit=crop" alt="Business meeting">
+          </div>
+          <div class="hero-slide">
+            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1600&h=900&fit=crop" alt="Strategy session">
+          </div>
           
-          <div class="cta-group">
+          <!-- Dark overlay for text readability -->
+          <div class="hero-overlay"></div>
+          
+          <!-- Text content overlaid on image -->
+          <div class="hero-text-overlay">
+            <h1>Your Research Team, <span class="gradient-text">On-Demand</span></h1>
+            <p>Move past the noise and get straight to the heart of what's happpening in the markets you care about, with MarketLens.</p>
+          </div>
+          
+          <!-- Carousel indicators -->
+          <div class="carousel-indicators">
+            <span class="indicator active" onclick="goToSlide(0)"></span>
+            <span class="indicator" onclick="goToSlide(1)"></span>
+            <span class="indicator" onclick="goToSlide(2)"></span>
+          </div>
+        </div>
+        
+        <!-- CTAs below image -->
+        <div class="hero-cta-section">
+          <div class="cta-buttons">
             <button class="btn-primary" onclick="switchView('output')">See Sample Output</button>
             <button class="btn-secondary" onclick="switchView('start')">Start Free Trial</button>
           </div>
-
-          <div class="problem-statement">
-            <h3>The Problem</h3>
-            <p>You need to understand semiconductor supply chains for Monday's meeting. You have 47 sources to read. You have 20 minutes.</p>
-          </div>
-
-          <div class="solution-statement">
-            <h3>The Solution</h3>
-            <p>MarketLens reads all 47 sources. Synthesizes the signal. Delivers institutional-grade analysis. In 10 minutes.</p>
-          </div>
         </div>
       </div>
+      
+      <!-- Problem/Solution cards below -->
+      <div class="info-cards-section">
+        <div class="info-card problem">
+          <h3> </h3>
+          <p></p>
+        </div>
 
-      <!-- Output View -->
-      <div class="content-view" id="output">
-        <h2 style="font-size: 42px; font-weight: 800; margin-bottom: 16px;">This Is What You Get</h2>
-        <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">Real output from a recession risk analysis. 28 sources. 11 pages. Generated in 6 minutes.</p>
+        <div class="info-card solution">
+          <h3> </h3>
+          <p></p>
+        </div>
+      </div>
+    </div>
 
-        <div class="output-preview">
-          <div class="output-header">
-            <div class="output-badge">Sample Report</div>
-            <div class="output-title">Deep Research: Recession Risks 2025-2026</div>
+    <!-- Output View -->
+    <div class="content-view" id="output">
+      <div class="output-section">
+        <div class="output-header">
+          <h2>Insitutional-Grade <strong>Insight</strong></h2>
+          <p>Real interface showing a recession risk analysis. 28 sources. 11 pages. Up to Date Information. Compiled in minutes.</p>
+        </div>
+
+        <!-- Screenshot Carousel -->
+        <div class="screenshot-carousel">
+          <div class="screenshot-slide active">
+            <img src="https://i.imgur.com/LDxtPUC.png" alt="Research Document View">
           </div>
-          <div class="output-content">
-            <h4>Integrative Summary</h4>
-            <p>As of November 2025, the U.S. and global economies stand at a critical juncture. While not yet in recession, multiple indicators suggest elevated risks of a significant economic slowdown. Global GDP growth remains positive but has decelerated, particularly in advanced economies. The U.S. labor market shows clear signs of cooling, with job growth slowing dramatically and unemployment beginning to rise.</p>
-
-            <p>Market valuations present a concerning picture. The S&P 500 Shiller CAPE ratio of 40.12 approaches dot-com bubble levels, and the Buffett Indicator (market cap to GDP) at 223.4% suggests significant market overvaluation. Corporate default risks have reached post-financial crisis highs, and certain sectors are already experiencing contraction.</p>
-
-            <h4>Investment Institutions' Outlook</h4>
-            <ul>
-              <li><strong>UBS:</strong> 93% recession probability by end of 2025 (with qualifications)</li>
-              <li><strong>J.P. Morgan:</strong> 40% probability, down from 60%</li>
-              <li><strong>Goldman Sachs:</strong> 20% probability, baseline reacceleration in 2026</li>
-            </ul>
-
-            <h4>Key Indicators</h4>
-            <p><strong>Labor Market:</strong> August 2025 added only 22,000 jobs (down from 79,000 in July). Unemployment at 4.36%. Unemployed workers now outnumber job openings for first time since April 2021.</p>
-
-            <p><strong>Corporate Stress:</strong> Default risk at 9.2%, a post-financial crisis high. Leveraged loan default rate at 7.6%.</p>
-
-            <p><strong>Market Valuation:</strong> S&P 500 CAPE at 40.12, approaching dot-com levels. Buffett Indicator at 223.4%, 56.5% above historical norms.</p>
-
-            <div class="citations">
-              <h5>Sources (28 Total)</h5>
-              <a href="#" class="citation-item">1. IMF World Economic Outlook (October 2025)</a>
-              <a href="#" class="citation-item">2. Federal Reserve FOMC Statement (October 29, 2025)</a>
-              <a href="#" class="citation-item">3. Goldman Sachs: Fed Rate Cut Forecast</a>
-              <a href="#" class="citation-item">4. Moody's: US Corporate Default Risk Analysis</a>
-              <a href="#" class="citation-item">5. GuruFocus: S&P 500 Shiller CAPE Ratio</a>
-              <span style="font-size: 12px; color: #9ca3af; margin-top: 8px; display: block;">+ 23 more authoritative sources</span>
-            </div>
+          <div class="screenshot-slide">
+            <img src="https://i.imgur.com/HGDXF0A.png" alt="Portfolio Pulse View">
+          </div>
+          <div class="screenshot-slide">
+            <img src="https://i.imgur.com/ZPfo7MA.png" alt="Synthesis Interface">
+          </div>
+          
+          <!-- Navigation arrows -->
+          <button class="screenshot-nav prev" onclick="changeScreenshot(-1)">‹</button>
+          <button class="screenshot-nav next" onclick="changeScreenshot(1)">›</button>
+          
+          <!-- Indicators -->
+          <div class="screenshot-indicators">
+            <span class="screenshot-indicator active" onclick="goToScreenshot(0)"></span>
+            <span class="screenshot-indicator" onclick="goToScreenshot(1)"></span>
+            <span class="screenshot-indicator" onclick="goToScreenshot(2)"></span>
           </div>
         </div>
 
-        <p style="font-size: 16px; color: #6b7280; max-width: 800px;">
-          <strong>This is what institutional analysts produce.</strong> Except they take 3 days and cost $150K/year. MarketLens does it in minutes, for any topic, on-demand.
-        </p>
+        <div class="output-footer">
+          <p><strong>MarketLens accomplishes what a team of institutional analysts can in minutes, not days.</strong></p>
+        </div>
       </div>
+    </div>
 
-      <!-- Process View -->
-      <div class="content-view" id="process">
-        <h2 style="font-size: 42px; font-weight: 800; margin-bottom: 16px;">How It Works</h2>
-        <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">Professional research infrastructure, simplified to three steps.</p>
+    <!-- Process View -->
+    <div class="content-view" id="process">
+      <div class="process-section">
+        <div class="section-header">
+          <h2>Financial Research Simplified</h2>
+          <p>Dynamic input allows you to guide the research while using our system to create personalized research.</p>
+        </div>
 
-        <div class="process-steps">
-          <div class="process-step">
+        <div class="process-grid">
+          <div class="process-card">
             <div class="step-number">1</div>
             <h3>Choose Framework</h3>
-            <p>Select from 12+ analytical frameworks: DCF valuations, Porter's Five Forces, ecosystem mapping, scenario modeling, or create your own custom approach.</p>
+            <p>Select from 40+ customizable analytical frameworks such as DCF valuations, Business Model and Exposures analysis, Ecosystem Mapping, Scenario Modeling, Industry Consolidation: M/A, and more.</p>
           </div>
 
-          <div class="process-step">
+          <div class="process-card">
             <div class="step-number">2</div>
             <h3>Define Parameters</h3>
-            <p>Set scope (asset, sector, market), depth (high-level to comprehensive), analytical rigor (key figures to exhaustive), and perspective (investment, educational, technical).</p>
+            <p>Setting the scope, depth, analytical rigor, and perspective dynamically allows your research to meet your needs while custom input lets you target specific metrics or dynamics.</p>
           </div>
 
-          <div class="process-step">
+          <div class="process-card">
             <div class="step-number">3</div>
             <h3>Get Intelligence</h3>
-            <p>Receive synthesized research from 10-30 authoritative sources. Chat with the document. Generate follow-up research. Export for clients.</p>
+            <p>Receive synthesized research from 20+ authoritative sources. Chat with the document. Create follow-up research. Export for clients.</p>
           </div>
         </div>
 
-        <div style="margin-top: 60px; max-width: 700px;">
-          <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">What Happens Behind The Scenes</h3>
-          <p style="font-size: 16px; color: #6b7280; line-height: 1.7; margin-bottom: 12px;">
-            MarketLens queries multiple authoritative sources simultaneously (IMF, Federal Reserve, Goldman Sachs, Bloomberg, SEC filings). It identifies conflicting viewpoints, synthesizes perspectives, extracts key metrics, and structures analysis using proven financial frameworks. Every claim is cited. Every source is verifiable.
-          </p>
-          <p style="font-size: 16px; color: #6b7280; line-height: 1.7;">
-            The result: institutional-grade research without the institutional overhead.
-          </p>
+        <div class="process-details">
+          <h3>What Happens Behind The Scenes</h3>
+          <p>MarketLens queries multiple authoritative sources simultaneously (IMF, Federal Reserve, Goldman Sachs, Bloomberg, SEC filings). It identifies conflicting viewpoints, synthesizes perspectives, extracts key metrics, and structures analysis using proven financial frameworks.</p>
+          <p>Every claim is cited. Every source is verifiable. The result: institutional-grade research without the institutional overhead.</p>
         </div>
       </div>
+    </div>
 
-      <!-- Proof View -->
-      <div class="content-view" id="proof">
-        <h2 style="font-size: 42px; font-weight: 800; margin-bottom: 16px;">Why This Matters</h2>
-        <p style="font-size: 18px; color: #6b7280; margin-bottom: 40px;">The difference between guessing and knowing.</p>
+    <!-- Proof View -->
+    <div class="content-view" id="proof">
+      <div class="proof-section">
+        <div class="section-header">
+          <h2>Designed for Robust Financial Research</h2>
+          <p>Our custom built research system is designed to narrow in on what matters and filter out what doesnt.</p>
+        </div>
 
         <div class="proof-grid">
           <div class="proof-card">
-            <div class="proof-stat">10-30</div>
-            <h4>Sources Per Report</h4>
-            <p>Every research document synthesizes 10-30 authoritative sources. Not blog posts. Real data from IMF, Federal Reserve, SEC, and institutional research.</p>
+            <center><div class="proof-stat">20+</div>
+            <h4>High Quality Sources Per Report</h4>
+            <p>Every research document synthesizes 20+ authoritative sources skipping bloat like blog posts, twitter, and reddit to give you reliable high quality insight from the names you already trust.</p></center>
           </div>
 
           <div class="proof-card">
-            <div class="proof-stat">5-10min</div>
+           <center> <div class="proof-stat">5-10min</div>
             <h4>Generation Time</h4>
-            <p>What takes an analyst 3 days, MarketLens delivers in minutes. Same quality, fraction of the time. Repeatable for every topic you need to understand.</p>
+            <p>What takes an analyst 3 days, MarketLens delivers in minutes. Same quality, fraction of the time. Repeatable for every topic you need to understand.</p></center>
           </div>
 
           <div class="proof-card">
-            <div class="proof-stat">12+</div>
-            <h4>Research Frameworks</h4>
-            <p>Traditional analysis, ecosystem mapping, comparative studies, scenario modeling, narrative analysis, and custom frameworks. Choose what fits your strategy.</p>
+            <center><div class="proof-stat">40+</div>
+            <h4>Customizable Research Frameworks</h4>
+            <p>From Traditional analysis like SWOT and Porter's 5 Forces, to Ecosystem Mapping, Comparative Studies, Scenario Modeling, and Narrative Analysis your research can finally reflect your strategy.</p></center>
           </div>
 
           <div class="proof-card">
-            <div class="proof-stat">100%</div>
+           <center> <div class="proof-stat">100%</div>
             <h4>Cited & Verifiable</h4>
-            <p>Every claim links back to its source. Click through to IMF data, Fed statements, or Goldman research. Trust but verify—everything is documented.</p>
+            <p>Every claim links back to its source. Click through to IMF data, Fed statements, or Goldman research. Everything is documented for your peace of mind.</p></center>
           </div>
         </div>
 
-        <div style="margin-top: 60px; max-width: 800px;">
-          <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">The Alternative</h3>
-          <p style="font-size: 16px; color: #6b7280; line-height: 1.7; margin-bottom: 12px;">
-            Hire a junior analyst: $75K-$150K/year. Wait 2-3 days per report. Limited to their expertise and capacity.
-          </p>
-          <p style="font-size: 16px; color: #6b7280; line-height: 1.7; margin-bottom: 12px;">
-            Use ChatGPT: Generic responses. No source verification. No financial framework expertise. Risk of hallucination.
-          </p>
-          <p style="font-size: 16px; color: #6b7280; line-height: 1.7;">
-            <strong>Or use MarketLens:</strong> Institutional quality. Every topic. On-demand. Verifiable. Repeatable.
-          </p>
+        <div class="alternatives">
+           <center> <div class="proof-stat">Our Ethos</div>
+            <h4><center>Level-Headed Financial Insight on Demand</h4>
+          <p>MarketLens focuses on the fundamentals of investing and institutional research to ensure your results are grounded and realistic. After years in the finance industry, our experts have developed a clear and holistic perspective to understanding financial markets enabling you to see clearly in a world full of noise.</p><center>
         </div>
       </div>
-
-      <!-- Start View -->
-      <div class="content-view" id="start">
-        <div class="start-cta">
-          <h2>Ready to Research Smarter?</h2>
-          <p>Generate your first institutional-grade research report. See the difference quality intelligence makes.</p>
-          <button class="btn-primary" style="font-size: 18px; padding: 18px 48px;">Start Free Trial</button>
-          <p style="font-size: 14px; color: #9ca3af; margin-top: 20px;">No credit card required • Full platform access • Export & share reports</p>
-        </div>
-
-        <div style="margin-top: 80px; text-align: center;">
-          <h3 style="font-size: 20px; font-weight: 700; color: #4b5563; margin-bottom: 30px;">Trusted By</h3>
-          <div style="display: flex; gap: 60px; justify-content: center; align-items: center; opacity: 0.4;">
-            <div style="font-size: 18px; font-weight: 600; color: #6b7280;">Independent RIAs</div>
-            <div style="font-size: 18px; font-weight: 600; color: #6b7280;">Family Offices</div>
-            <div style="font-size: 18px; font-weight: 600; color: #6b7280;">Investment Advisors</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 80px; max-width: 600px; margin-left: auto; margin-right: auto;">
-          <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center;">Questions?</h3>
-          <div style="background: #f9fafb; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
-            <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin-bottom: 16px;">
-              <strong>Is this just ChatGPT with prompts?</strong><br>
-              No. MarketLens uses specialized financial frameworks, queries authoritative sources, and synthesizes institutional-grade analysis. Every output is cited and verifiable.
-            </p>
-            <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin-bottom: 16px;">
-              <strong>How is this different from Bloomberg Terminal?</strong><br>
-              Bloomberg gives you data. MarketLens gives you synthesis. We aggregate 30+ sources and produce coherent analysis—like having an analyst read everything and write the report.
-            </p>
-            <p style="font-size: 15px; color: #4b5563; line-height: 1.7;">
-              <strong>Can I share reports with clients?</strong><br>
-              Yes. Every report can be exported, white-labeled, and shared. Perfect for client presentations and investment committees.
-            </p>
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Right Context Panel -->
-    <div class="context-panel">
-      <div class="context-card">
-        <div class="context-label">Average Time</div>
-        <div class="context-value">5min</div>
-        <div class="context-description">To generate institutional-grade research</div>
-      </div>
+    <!-- Start View -->
+    <div class="content-view" id="start">
+      <div class="start-section">
+        <h2>Ready to Research Smarter?</h2>
+        <p>Create your first institutional-grade research report. See the difference quality intelligence makes.</p>
+        <button class="cta-large">Start Free Trial</button>
+        <p class="cta-subtext">No credit card required • Full platform access • Export & share reports</p>
 
-      <div class="context-card">
-        <div class="context-label">Sources Per Report</div>
-        <div class="context-value">10-30</div>
-        <div class="context-description">Authoritative sources synthesized</div>
-      </div>
+        <div class="trust-section">
+          <h3>Trusted By</h3>
+          <div class="trust-logos">
+            <div>Independent RIAs</div>
+            <div>Family Offices</div>
+            <div>Investment Advisors</div>
+          </div>
+        </div>
 
-      <div class="context-card">
-        <div class="context-label">Frameworks</div>
-        <ul class="context-list">
-          <li>Traditional Analysis</li>
-          <li>Ecosystem Mapping</li>
-          <li>Scenario Modeling</li>
-          <li>Comparative Studies</li>
-          <li>Narrative Analysis</li>
-          <li>+ Custom Approaches</li>
-        </ul>
-      </div>
+        <div class="faq-section">
+          <h3>Frequently Asked Questions</h3>
+          
+          <div class="faq-item">
+            <div class="faq-question">Can I share reports with clients?</div>
+            <div class="faq-answer">Yes. Every report can be exported, white-labeled, and shared. Perfect for client presentations and investment committees.</div>
+          </div>
 
-      <div class="context-card" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; border: none;">
-        <div class="context-label" style="color: rgba(255,255,255,0.8);">Time Saved</div>
-        <div class="context-value" style="color: white;">~25hrs</div>
-        <div class="context-description" style="color: rgba(255,255,255,0.9)">Per research report vs traditional methods</div>
+          <div class="faq-item">
+            <div class="faq-question">How is this different from Bloomberg Terminal?</div>
+            <div class="faq-answer">Bloomberg gives you data. MarketLens gives you synthesis. We aggregate 30+ sources and produce coherent analysis. It's like having an analyst read everything and write an in depth report so you gain a true understanding of the market dynamics and environment.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">Is this just ChatGPT with prompts?</div>
+            <div class="faq-answer">No. MarketLens is built on an agentic platform called Vertesia meant to harness LLMs and give them advanced tools and logic. Additionally, MarketLens uses proprietary financial frameworks, methodologies, and ideaologies to synthesize institutional-grade analysis. The system is engineered from the ground up to enhance decision making and save time.</div>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
 
   <script>
-    // View switching
     function switchView(viewId) {
-      // Update content
+      // Update content views
       document.querySelectorAll('.content-view').forEach(view => {
         view.classList.remove('active');
       });
       document.getElementById(viewId).classList.add('active');
 
-      // Update nav
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.view === viewId) {
-          item.classList.add('active');
+      // Update nav tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.view === viewId) {
+          tab.classList.add('active');
         }
       });
     }
 
-    // Nav item click handlers
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', function() {
+    // Nav tab click handlers
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
         switchView(this.dataset.view);
       });
     });
+
+    // Carousel functionality (Overview page)
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const totalSlides = slides.length;
+    let autoRotateInterval;
+
+    function showSlide(index) {
+      // Remove active class from all slides and indicators
+      slides.forEach(slide => slide.classList.remove('active'));
+      indicators.forEach(indicator => indicator.classList.remove('active'));
+      
+      // Add active class to current slide and indicator
+      slides[index].classList.add('active');
+      indicators[index].classList.add('active');
+      
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      let next = (currentSlide + 1) % totalSlides;
+      showSlide(next);
+    }
+
+    function goToSlide(index) {
+      showSlide(index);
+      // Reset auto-rotation timer when manually changing slides
+      clearInterval(autoRotateInterval);
+      autoRotateInterval = setInterval(nextSlide, 5000);
+    }
+
+    // Auto-rotate every 5 seconds
+    autoRotateInterval = setInterval(nextSlide, 5000);
+
+    // Pause auto-rotation when hovering over carousel
+    const carousel = document.querySelector('.hero-carousel');
+    if (carousel) {
+      carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoRotateInterval);
+      });
+      
+      carousel.addEventListener('mouseleave', () => {
+        autoRotateInterval = setInterval(nextSlide, 5000);
+      });
+    }
+
+    // Screenshot carousel functionality (Output page)
+    let currentScreenshot = 0;
+    const screenshotSlides = document.querySelectorAll('.screenshot-slide');
+    const screenshotIndicators = document.querySelectorAll('.screenshot-indicator');
+    const totalScreenshots = screenshotSlides.length;
+
+    function showScreenshot(index) {
+      // Wrap around
+      if (index >= totalScreenshots) index = 0;
+      if (index < 0) index = totalScreenshots - 1;
+      
+      // Remove active class from all
+      screenshotSlides.forEach(slide => slide.classList.remove('active'));
+      screenshotIndicators.forEach(indicator => indicator.classList.remove('active'));
+      
+      // Add active class to current
+      screenshotSlides[index].classList.add('active');
+      screenshotIndicators[index].classList.add('active');
+      
+      currentScreenshot = index;
+    }
+
+    function changeScreenshot(direction) {
+      showScreenshot(currentScreenshot + direction);
+    }
+
+    function goToScreenshot(index) {
+      showScreenshot(index);
+    }
   </script>
 
 </body>
