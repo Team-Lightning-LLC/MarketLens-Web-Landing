@@ -3,1200 +3,542 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MarketLens - Your Research Team, On-Demand</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>MarketLens — AI That Thinks</title>
+  <meta name="description" content="Institutional-grade financial research in minutes. MarketLens encodes the methodology of a senior analyst into an AI-powered platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #ffffff;
-      background: #0a1628;
-      overflow: hidden;
-      height: 100vh;
-      position: relative;
-    }
-
-    /* Subtle texture overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Header */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: rgba(10, 22, 40, 0.95);
-      backdrop-filter: blur(20px);
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 48px;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      color: white;
-      letter-spacing: -0.5px;
-    }
-
-    .logo-tagline {
-      font-size: 9px;
-      color: rgba(255, 255, 255, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-top: 2px;
-    }
-
-    .header-cta {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      padding: 10px 26px;
-      border-radius: 7px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-    }
-
-    .header-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
-    }
-
-    /* Navigation Tabs */
-    .nav-tabs {
-      position: fixed;
-      top: 60px;
-      left: 0;
-      right: 0;
-      height: 42px;
-      background: rgba(10, 22, 40, 0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      padding: 0 48px;
-      z-index: 999;
-    }
-
-    .nav-tab {
-      padding: 7px 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.5);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border-radius: 5px;
-      position: relative;
-      user-select: none;
-    }
-
-    .nav-tab:hover {
-      color: rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .nav-tab.active {
-      color: white;
-      background: rgba(59, 130, 246, 0.15);
-      font-weight: 600;
-    }
-
-    .nav-tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-    }
-
-    /* Content Container */
-    .content-container {
-      position: absolute;
-      top: 102px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-    }
-
-    .content-view {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-      padding: 32px 48px;
-      overflow-y: auto;
-    }
-
-    .content-view.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    /* Overview Section with Image Carousel */
-    .hero-image-section {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .hero-carousel {
-      position: relative;
-      width: 100%;
-      height: 480px;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 24px;
-    }
-
-    .hero-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    .hero-slide.active {
-      opacity: 1;
-    }
-
-    .hero-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(to bottom, rgba(10, 22, 40, 0.4) 0%, rgba(10, 22, 40, 0.85) 100%);
-      z-index: 1;
-    }
-
-    .hero-text-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 2;
-      max-width: 900px;
-      padding: 0 40px;
-    }
-
-    .hero-text-overlay h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 48px;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      color: #ffffff;
-      letter-spacing: -1px;
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .hero-text-overlay p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.95);
-      font-weight: 400;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .carousel-indicators {
-      position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 12px;
-      z-index: 2;
-    }
-
-    .indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .indicator:hover {
-      background: rgba(255, 255, 255, 0.6);
-    }
-
-    .indicator.active {
-      background: rgba(59, 130, 246, 1);
-      width: 32px;
-      border-radius: 5px;
-    }
-
-    .hero-cta-section {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: inline-block;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      padding: 12px 28px;
-      border-radius: 7px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      display: inline-block;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(59, 130, 246, 0.5);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      padding: 12px 28px;
-      border-radius: 7px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      display: inline-block;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-
-
-    /* Output Section */
-    .output-section {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .output-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .output-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 900;
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
-    }
-
-    .output-header p {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Screenshot Carousel */
-    .screenshot-carousel {
-      position: relative;
-      max-width: 900px;
-      margin: 0 auto 16px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .screenshot-slide {
-      display: none;
-      width: 100%;
-    }
-
-    .screenshot-slide.active {
-      display: block;
-    }
-
-    .screenshot-slide img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-.screenshot-nav {
-  display: none;
-}
-
-   .screenshot-indicators {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 12px;
-  z-index: 10;
-}
-
-.screenshot-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(107, 114, 128, 0.5);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.screenshot-indicator:hover {
-  background: rgba(156, 163, 175, 0.7);
-  transform: scale(1.15);
-}
-.screenshot-indicator.active {
-  background: #3b82f6;
-  width: 36px;
-  border-radius: 7px;
-  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.6);
-}
-
-    .output-footer {
-      text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 16px 0;
-    }
-
-    .output-footer p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .output-footer strong {
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    /* Process Section */
-    .process-section {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .section-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .section-header p {
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .process-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    .process-card {
-      text-align: center;
-      position: relative;
-    }
-
-    .step-number {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-      font-size: 20px;
-      font-weight: 800;
-      color: white;
-      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
-      transition: all 0.4s ease;
-    }
-
-    .process-card:hover .step-number {
-      transform: scale(1.1);
-      box-shadow: 0 16px 50px rgba(59, 130, 246, 0.6);
-    }
-
-    .process-card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 10px;
-    }
-
-    .process-card p {
-      font-size: 13px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .process-details {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .process-details h3 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 12px;
-    }
-
-    .process-details p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 10px;
-    }
-
-    .proof-section {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .proof-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .proof-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 24px;
-      text-align: center;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .proof-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(59, 130, 246, 0.3);
-      transform: translateY(-4px);
-    }
-
-    .proof-stat {
-      font-size: 32px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
-      display: inline-block;
-    }
-
-    .proof-card h4 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-
-    .proof-card p {
-      font-size: 13px;
-      line-height: 1.5;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .alternatives {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 32px;
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .alternatives h4 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 12px;
-    }
-
-    .alternatives p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Start Section */
-    .start-section {
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .start-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      line-height: 1.2;
-      letter-spacing: -0.5px;
-    }
-
-    .start-section p {
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .cta-large {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      padding: 14px 40px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      display: inline-block;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 12px 48px rgba(59, 130, 246, 0.4);
-    }
-
-    .cta-large:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.6);
-    }
-
-    .cta-subtext {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
-      margin-top: 12px;
-    }
-
-    .trust-section {
-      margin-top: 36px;
-      text-align: center;
-    }
-
-    .trust-section h3 {
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: rgba(255, 255, 255, 0.4);
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-
-    .trust-logos {
-      display: flex;
-      gap: 40px;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .trust-logos div {
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .faq-section {
-      margin-top: 36px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .faq-section h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .faq-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 18px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .faq-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    .faq-question {
-      font-size: 14px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-
-    .faq-answer {
-      font-size: 13px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* Scrollbar Styling */
-    .content-view::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .content-view::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .content-view::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-    }
-
-    .content-view::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* Focus states for accessibility */
-    button:focus-visible,
-    .nav-tab:focus-visible {
-      outline: 2px solid #3b82f6;
-      outline-offset: 2px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .process-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-      
-      .proof-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      
-      .hero-carousel {
-        height: 400px;
-      }
-      
-      .hero-text-overlay h1 {
-        font-size: 36px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        padding: 0 24px;
-      }
-      
-      .nav-tabs {
-        padding: 0 16px;
-        gap: 4px;
-        overflow-x: auto;
-      }
-      
-      .nav-tab {
-        padding: 7px 14px;
-        font-size: 12px;
-        white-space: nowrap;
-      }
-      
-      .content-view {
-        padding: 24px;
-      }
-      
-      .hero-carousel {
-        height: 320px;
-        border-radius: 12px;
-      }
-      
-      .hero-text-overlay {
-        padding: 0 20px;
-      }
-      
-      .hero-text-overlay h1 {
-        font-size: 28px;
-        margin-bottom: 12px;
-      }
-      
-      .hero-text-overlay p {
-        font-size: 14px;
-      }
-      
-      .cta-buttons {
-        flex-direction: column;
-        gap: 10px;
-      }
-      
-      .btn-primary,
-      .btn-secondary {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .section-header h2,
-      .output-header h2,
-      .start-section h2 {
-        font-size: 26px;
-      }
-      
-      .trust-logos {
-        flex-direction: column;
-        gap: 16px;
-      }
-      
-      .faq-section {
-        margin-top: 28px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header {
-        padding: 0 16px;
-      }
-      
-      .logo-text {
-        font-size: 18px;
-      }
-      
-      .header-cta {
-        padding: 8px 16px;
-        font-size: 12px;
-      }
-      
-      .content-view {
-        padding: 16px;
-      }
-      
-      .hero-carousel {
-        height: 260px;
-      }
-      
-      .hero-text-overlay h1 {
-        font-size: 24px;
-      }
-      
-      .step-number {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-      }
-      
-      .proof-stat {
-        font-size: 28px;
-      }
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#060d1b;
+      --bg-elevated:#0c1629;
+      --bg-card:#0f1a30;
+      --border:rgba(255,255,255,0.06);
+      --border-hover:rgba(59,130,246,0.3);
+      --text:#ffffff;
+      --text-secondary:rgba(255,255,255,0.6);
+      --text-tertiary:rgba(255,255,255,0.4);
+      --accent:#3b82f6;
+      --accent-glow:rgba(59,130,246,0.15);
+      --accent-gradient:linear-gradient(135deg,#60a5fa 0%,#3b82f6 50%,#1d4ed8 100%);
+      --serif:'Playfair Display',Georgia,serif;
+      --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:var(--sans);color:var(--text);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+    .header{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(6,13,27,0.9);backdrop-filter:blur(24px);z-index:1000;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,4vw,64px);transition:all 0.4s ease}
+    .header.scrolled{background:rgba(6,13,27,0.97);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo-mark{width:32px;height:32px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:white;box-shadow:0 4px 16px rgba(59,130,246,0.3)}
+    .logo-text{font-size:20px;font-weight:700;letter-spacing:-0.5px}
+    .logo-sub{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:var(--text-tertiary);margin-top:1px}
+    .header-nav{display:flex;align-items:center;gap:32px}
+    .header-nav a{font-size:13px;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color 0.3s}
+    .header-nav a:hover{color:var(--text)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:600;border:none;cursor:pointer;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);text-decoration:none}
+    .btn-primary{background:var(--accent-gradient);color:white;padding:10px 24px;border-radius:8px;font-size:13px;box-shadow:0 4px 20px rgba(59,130,246,0.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,130,246,0.5)}
+    .btn-ghost{background:transparent;color:var(--text-secondary);padding:10px 20px;border-radius:8px;font-size:13px;border:1px solid var(--border)}
+    .btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.04)}
+
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px clamp(24px,6vw,80px) 80px;position:relative}
+    .hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);pointer-events:none}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--accent-glow);border:1px solid rgba(59,130,246,0.2);font-size:11px;font-weight:600;color:#60a5fa;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:32px;position:relative;z-index:1}
+    .hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#60a5fa;animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .hero h1{font-family:var(--serif);font-size:clamp(40px,6vw,72px);font-weight:900;line-height:1.05;letter-spacing:-2px;max-width:900px;margin-bottom:24px;position:relative;z-index:1}
+    .hero h1 .gradient{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-sub{font-size:clamp(16px,2vw,20px);color:var(--text-secondary);max-width:560px;line-height:1.6;margin-bottom:40px;position:relative;z-index:1;font-weight:400}
+    .hero-ctas{display:flex;gap:12px;position:relative;z-index:1}
+    .hero-ctas .btn-primary{padding:14px 32px;font-size:15px;font-weight:700}
+    .hero-ctas .btn-ghost{padding:14px 28px;font-size:15px}
+    .hero-proof{margin-top:48px;display:flex;align-items:center;gap:24px;position:relative;z-index:1}
+    .hero-proof span{font-size:12px;color:var(--text-tertiary);font-weight:500}
+    .hero-proof .divider{width:1px;height:16px;background:var(--border)}
+
+    section{padding:clamp(80px,10vw,120px) clamp(24px,6vw,80px);position:relative;z-index:1}
+    .section-label{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:#60a5fa;font-weight:700;margin-bottom:16px}
+    .section-title{font-family:var(--serif);font-size:clamp(32px,4vw,48px);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:16px}
+    .section-desc{font-size:16px;color:var(--text-secondary);max-width:560px;line-height:1.7}
+    .container{max-width:1200px;margin:0 auto}
+    .center-header{text-align:center;margin-bottom:8px}
+    .center-header .section-desc{margin:0 auto}
+
+    .problem{background:var(--bg-elevated);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+    .problem-list{display:flex;flex-direction:column;gap:20px;margin-top:32px}
+    .problem-item{display:flex;gap:16px;align-items:flex-start}
+    .problem-icon{width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:#f87171;font-weight:700}
+    .problem-item h4{font-size:14px;font-weight:700;margin-bottom:4px}
+    .problem-item p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+    .problem-right{position:relative}
+    .problem-quote{font-family:var(--serif);font-size:28px;font-weight:700;line-height:1.3;letter-spacing:-0.5px}
+    .problem-quote .highlight{color:#60a5fa}
+    .problem-attribution{margin-top:16px;font-size:13px;color:var(--text-tertiary);line-height:1.6}
+    .problem-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+    .problem-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
+    .problem-stat .num{font-size:28px;font-weight:900;color:#f87171;display:block}
+    .problem-stat .label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+
+    .difference-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:48px;border-radius:12px;overflow:hidden}
+    .diff-col{padding:40px}
+    .diff-col.them{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.08)}
+    .diff-col.us{background:var(--accent-glow);border:1px solid rgba(59,130,246,0.15)}
+    .diff-col h3{font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:24px}
+    .diff-col.them h3{color:#f87171}
+    .diff-col.us h3{color:#60a5fa}
+    .diff-row{padding:16px 0;border-bottom:1px solid var(--border)}
+    .diff-row:last-child{border-bottom:none}
+    .diff-row .dim{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-tertiary);font-weight:600;margin-bottom:6px}
+    .diff-row p{font-size:14px;line-height:1.5;color:var(--text-secondary)}
+    .diff-col.us .diff-row p{color:rgba(255,255,255,0.85)}
+
+    .showcase{background:var(--bg-elevated);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .showcase-header{text-align:center;margin-bottom:48px}
+    .showcase-header .section-desc{margin:0 auto}
+    .showcase-browser{max-width:1000px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 40px 100px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.03)}
+    .browser-bar{height:40px;background:var(--bg-card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px}
+    .browser-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1)}
+    .browser-dot:first-child{background:rgba(239,68,68,0.5)}
+    .browser-dot:nth-child(2){background:rgba(234,179,8,0.5)}
+    .browser-dot:nth-child(3){background:rgba(34,197,94,0.5)}
+    .showcase-slides{position:relative;background:var(--bg-card)}
+    .showcase-slide{display:none;width:100%}
+    .showcase-slide.active{display:block}
+    .showcase-slide img{width:100%;height:auto;display:block}
+    .showcase-dots{display:flex;justify-content:center;gap:10px;margin-top:24px}
+    .showcase-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;transition:all 0.3s}
+    .showcase-dot:hover{background:rgba(255,255,255,0.3)}
+    .showcase-dot.active{background:var(--accent);width:32px;border-radius:5px;box-shadow:0 2px 12px rgba(59,130,246,0.4)}
+    .showcase-captions{text-align:center;margin-top:20px}
+    .cap{display:none;font-size:14px;color:var(--text-secondary)}
+    .cap.active{display:block}
+
+    .process-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px}
+    .step{position:relative;padding:32px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;transition:all 0.4s ease}
+    .step:hover{border-color:var(--border-hover);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+    .step-num{font-size:48px;font-weight:900;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:16px}
+    .step h3{font-size:18px;font-weight:700;margin-bottom:10px}
+    .step p{font-size:14px;color:var(--text-secondary);line-height:1.7}
+
+    .proof{background:var(--bg-elevated);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .proof-header{text-align:center;margin-bottom:48px}
+    .proof-header .section-desc{margin:0 auto}
+    .proof-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:48px}
+    .metric{text-align:center;padding:32px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;transition:all 0.4s ease}
+    .metric:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+    .metric .num{font-size:36px;font-weight:900;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1.1}
+    .metric h4{font-size:13px;font-weight:700;margin-top:8px;margin-bottom:6px}
+    .metric p{font-size:12px;color:var(--text-secondary);line-height:1.5}
+    .comparison-table{max-width:800px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .comp-header{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--bg-card);border-bottom:1px solid var(--border)}
+    .comp-header div{padding:16px 20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px}
+    .comp-header div:nth-child(2){color:#f87171}
+    .comp-header div:nth-child(3){color:#60a5fa}
+    .comp-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+    .comp-row:last-child{border-bottom:none}
+    .comp-row div{padding:14px 20px;font-size:13px;color:var(--text-secondary);line-height:1.5}
+    .comp-row div:first-child{font-weight:600;color:var(--text)}
+    .comp-row:nth-child(odd){background:rgba(255,255,255,0.01)}
+
+    .ethos{text-align:center}
+    .ethos-quote{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;letter-spacing:-1px;max-width:800px;margin:0 auto 24px}
+    .ethos-quote .gradient{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .ethos-sub{font-size:16px;color:var(--text-secondary);max-width:600px;margin:0 auto;line-height:1.7}
+
+    .final-cta{text-align:center;position:relative}
+    .final-cta::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%);pointer-events:none}
+    .final-cta .section-title{max-width:600px;margin:0 auto 12px}
+    .final-cta .section-desc{margin:0 auto 36px}
+    .final-cta .btn-primary{padding:16px 40px;font-size:16px;font-weight:700;box-shadow:0 12px 48px rgba(59,130,246,0.35)}
+    .final-cta .btn-primary:hover{box-shadow:0 20px 60px rgba(59,130,246,0.5)}
+    .cta-sub{font-size:12px;color:var(--text-tertiary);margin-top:16px}
+    .trust-row{display:flex;gap:40px;justify-content:center;align-items:center;margin-top:48px;flex-wrap:wrap}
+    .trust-row span{font-size:12px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px}
+
+    .footer{padding:32px clamp(24px,6vw,80px);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+    .footer-left{font-size:12px;color:var(--text-tertiary)}
+    .footer-right{display:flex;gap:24px}
+    .footer-right a{font-size:12px;color:var(--text-tertiary);text-decoration:none;transition:color 0.3s}
+    .footer-right a:hover{color:var(--text-secondary)}
+
+    .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-delay-1{transition-delay:0.1s}
+    .reveal-delay-2{transition-delay:0.2s}
+    .reveal-delay-3{transition-delay:0.3s}
+
+    @media(max-width:1024px){
+      .problem-grid{grid-template-columns:1fr;gap:48px}
+      .difference-grid{grid-template-columns:1fr}
+      .process-steps{grid-template-columns:1fr;max-width:500px;margin-left:auto;margin-right:auto}
+      .proof-metrics{grid-template-columns:repeat(2,1fr)}
+      .comp-header div,.comp-row div{padding:12px 14px;font-size:12px}
+    }
+    @media(max-width:768px){
+      .header-nav a:not(.btn){display:none}
+      .hero h1{letter-spacing:-1px}
+      .hero-ctas{flex-direction:column;width:100%;max-width:320px}
+      .hero-ctas .btn{width:100%}
+      .hero-proof{flex-direction:column;gap:8px}
+      .hero-proof .divider{display:none}
+      .proof-metrics{grid-template-columns:1fr}
+      .problem-stats{grid-template-columns:1fr}
+      .trust-row{flex-direction:column;gap:12px}
+      .comp-header div,.comp-row div{padding:10px 12px;font-size:11px}
+      .footer{flex-direction:column;gap:16px;text-align:center}
+    }
+    @media(max-width:480px){
+      .difference-grid .diff-col{padding:24px}
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-section">
-      <div>
-        <div class="logo-text">MarketLens</div>
-        <div class="logo-tagline">Powered by Vertesia</div>
-      </div>
+<header class="header" id="header">
+  <div class="logo">
+    <div class="logo-mark">M</div>
+    <div>
+      <div class="logo-text">MarketLens</div>
+      <div class="logo-sub">Powered by Vertesia</div>
     </div>
-    <button class="header-cta" onclick="switchView('start')">Start Researching</button>
   </div>
+  <nav class="header-nav">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#output">Output</a>
+    <a href="#proof">The Difference</a>
+    <a href="#get-started" class="btn btn-primary">Start Free Trial</a>
+  </nav>
+</header>
 
-  <!-- Horizontal Tabs -->
-  <div class="nav-tabs">
-    <div class="nav-tab active" data-view="overview">Overview</div>
-    <div class="nav-tab" data-view="output">The Output</div>
-    <div class="nav-tab" data-view="process">The Process</div>
-    <div class="nav-tab" data-view="proof">The Difference</div>
-    <div class="nav-tab" data-view="start">Get Started</div>
+<section class="hero">
+  <div class="hero-badge">Financial Research Platform</div>
+  <h1>AI That Talks Is Everywhere.<br><span class="gradient">AI That Thinks Is MarketLens.</span></h1>
+  <p class="hero-sub">They save you a Google search. We save you an analyst. Institutional-grade research in minutes, sourced, structured, and ready to act on.</p>
+  <div class="hero-ctas">
+    <a href="#get-started" class="btn btn-primary">Start Free Trial</a>
+    <a href="#output" class="btn btn-ghost">See Sample Output</a>
   </div>
-
-  <!-- Content Container -->
-  <div class="content-container">
-    
-    <!-- Overview View -->
-    <div class="content-view active" id="overview">
-      <div class="hero-image-section">
-        <div class="hero-carousel">
-          <!-- Image slides - REPLACE src URLs with your own images -->
-          <div class="hero-slide active">
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&h=900&fit=crop" alt="Team collaboration">
-          </div>
-          <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&h=900&fit=crop" alt="Business meeting">
-          </div>
-          <div class="hero-slide">
-            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1600&h=900&fit=crop" alt="Strategy session">
-          </div>
-          
-          <!-- Dark overlay for text readability -->
-          <div class="hero-overlay"></div>
-          
-          <!-- Text content overlaid on image -->
-          <div class="hero-text-overlay">
-            <h1>Your Research Team, <span class="gradient-text">On-Demand</span></h1>
-            <p>Cut through market noise. Get to what matters.</p>
-          </div>
-          
-          <!-- Carousel indicators -->
-          <div class="carousel-indicators">
-            <span class="indicator active" onclick="goToSlide(0)"></span>
-            <span class="indicator" onclick="goToSlide(1)"></span>
-            <span class="indicator" onclick="goToSlide(2)"></span>
-          </div>
-        </div>
-        
-        <!-- CTAs below image -->
-        <div class="hero-cta-section">
-          <div class="cta-buttons">
-            <button class="btn-primary" onclick="switchView('output')">See Sample Output</button>
-            <button class="btn-secondary" onclick="switchView('start')">Start Free Trial</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Output View -->
-    <div class="content-view" id="output">
-      <div class="output-section">
-        <div class="output-header">
-          <h2>Institutional-Grade <strong>Insight</strong></h2>
-          <p>Recession risk analysis. 28 sources. 11 pages. Compiled in minutes.</p>
-        </div>
-
-        <!-- Screenshot Carousel -->
-        <div class="screenshot-carousel">
-          <div class="screenshot-slide active">
-            <img src="https://i.imgur.com/LDxtPUC.png" alt="Research Document View">
-          </div>
-          <div class="screenshot-slide">
-            <img src="https://i.imgur.com/HGDXF0A.png" alt="Portfolio Pulse View">
-          </div>
-          <div class="screenshot-slide">
-            <img src="https://i.imgur.com/ZPfo7MA.png" alt="Synthesis Interface">
-          </div>
-          
-          <!-- Navigation arrows -->
-          <button class="screenshot-nav prev" onclick="changeScreenshot(-1)">‹</button>
-          <button class="screenshot-nav next" onclick="changeScreenshot(1)">›</button>
-          
-          <!-- Indicators -->
-          <div class="screenshot-indicators">
-            <span class="screenshot-indicator active" onclick="goToScreenshot(0)"></span>
-            <span class="screenshot-indicator" onclick="goToScreenshot(1)"></span>
-            <span class="screenshot-indicator" onclick="goToScreenshot(2)"></span>
-          </div>
-        </div>
-
-        <div class="output-footer">
-          <p><strong>What takes an analyst team days, MarketLens delivers in minutes.</strong></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Process View -->
-    <div class="content-view" id="process">
-      <div class="process-section">
-        <div class="section-header">
-          <h2>Financial Research Simplified</h2>
-          <p>Guide the analysis. Define the scope. Get results that match your needs.</p>
-        </div>
-
-        <div class="process-grid">
-          <div class="process-card">
-            <div class="step-number">1</div>
-            <h3>Choose Framework</h3>
-            <p>40+ analytical frameworks: DCF valuations, business model analysis, ecosystem mapping, scenario modeling, M&A consolidation, and more.</p>
-          </div>
-
-          <div class="process-card">
-            <div class="step-number">2</div>
-            <h3>Define Parameters</h3>
-            <p>Set scope, depth, and perspective. Add custom inputs to target specific metrics or dynamics.</p>
-          </div>
-
-          <div class="process-card">
-            <div class="step-number">3</div>
-            <h3>Get Intelligence</h3>
-            <p>Get synthesis from 20+ sources. Chat with the document. Run follow-ups. Export for clients.</p>
-          </div>
-        </div>
-
-        <div class="process-details">
-          <h3>What Happens Behind The Scenes</h3>
-          <p>MarketLens queries IMF, Federal Reserve, Goldman Sachs, Bloomberg, SEC filings, and more simultaneously. It identifies conflicting viewpoints, extracts key metrics, and structures analysis using proven financial frameworks.</p>
-          <p>Every claim is cited. Every source is verifiable.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Proof View -->
-    <div class="content-view" id="proof">
-      <div class="proof-section">
-        <div class="section-header">
-          <h2>Built for Real Financial Research</h2>
-          <p>Focus on what matters. Filter out what doesn't.</p>
-        </div>
-
-        <div class="proof-grid">
-          <div class="proof-card">
-            <div class="proof-stat">20+</div>
-            <h4>High-Quality Sources Per Report</h4>
-            <p>20+ authoritative sources per document. No blog posts, Twitter, or Reddit. Just the names you trust.</p>
-          </div>
-
-          <div class="proof-card">
-            <div class="proof-stat">5-10min</div>
-            <h4>Generation Time</h4>
-            <p>What takes an analyst 3 days, delivered in minutes. Repeatable for any topic.</p>
-          </div>
-
-          <div class="proof-card">
-            <div class="proof-stat">40+</div>
-            <h4>Customizable Research Frameworks</h4>
-            <p>SWOT, Porter's 5 Forces, ecosystem mapping, comparative studies, scenario modeling, narrative analysis. Your research reflects your strategy.</p>
-          </div>
-
-          <div class="proof-card">
-            <div class="proof-stat">100%</div>
-            <h4>Cited & Verifiable</h4>
-            <p>Every claim links to its source. Click through to IMF data, Fed statements, or Goldman research.</p>
-          </div>
-        </div>
-
-        <div class="alternatives">
-          <div class="proof-stat">Our Ethos</div>
-          <h4>Level-Headed Financial Insight</h4>
-          <p>Grounded in fundamentals. Built by finance industry veterans. Designed to cut through noise and give you clarity.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Start View -->
-    <div class="content-view" id="start">
-      <div class="start-section">
-        <h2>Ready to Research Smarter?</h2>
-        <p>Create your first institutional-grade report.</p>
-        <button class="cta-large">Start Free Trial</button>
-        <p class="cta-subtext">No credit card required • Full platform access • Export & share reports</p>
-
-        <div class="trust-section">
-          <h3>Trusted By</h3>
-          <div class="trust-logos">
-            <div>Independent RIAs</div>
-            <div>Family Offices</div>
-            <div>Investment Advisors</div>
-          </div>
-        </div>
-
-        <div class="faq-section">
-          <h3>Frequently Asked Questions</h3>
-          
-          <div class="faq-item">
-            <div class="faq-question">Can I share reports with clients?</div>
-            <div class="faq-answer">Yes. Every report can be exported, white-labeled, and shared. Perfect for client presentations and investment committees.</div>
-          </div>
-
-          <div class="faq-item">
-            <div class="faq-question">How is this different from Bloomberg Terminal?</div>
-            <div class="faq-answer">Bloomberg gives you data. MarketLens gives you synthesis. We aggregate 30+ sources into coherent analysis, like having an analyst read everything and write an in-depth report.</div>
-          </div>
-
-          <div class="faq-item">
-            <div class="faq-question">How Do I?</div>
-            <div class="faq-answer">by...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <div class="hero-proof">
+    <span>No credit card required</span>
+    <div class="divider"></div>
+    <span>Full platform access</span>
+    <div class="divider"></div>
+    <span>Export and share reports</span>
   </div>
+</section>
 
-  <script>
-    function switchView(viewId) {
-      // Update content views
-      document.querySelectorAll('.content-view').forEach(view => {
-        view.classList.remove('active');
-      });
-      document.getElementById(viewId).classList.add('active');
+<section class="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="reveal">
+        <div class="section-label">The Problem</div>
+        <div class="section-title">The Research Problem Was Never About Information</div>
+        <p class="section-desc">The industry spent decades building bigger libraries. More subscriptions. More terminals. More data. But the bottleneck was never access. It was the analytical process between receiving a question and producing a defensible answer.</p>
+        <div class="problem-list">
+          <div class="problem-item">
+            <div class="problem-icon">&#8594;</div>
+            <div>
+              <h4>Dimension Blindness</h4>
+              <p>No systematic decomposition. The angles you explore are the ones that occur to you. The ones you miss stay missed.</p>
+            </div>
+          </div>
+          <div class="problem-item">
+            <div class="problem-icon">&#8594;</div>
+            <div>
+              <h4>Coverage by Intuition</h4>
+              <p>No gap analysis. When it feels like enough, you stop. Coverage is a feeling, not a measurement.</p>
+            </div>
+          </div>
+          <div class="problem-item">
+            <div class="problem-icon">&#8594;</div>
+            <div>
+              <h4>Siloed Synthesis</h4>
+              <p>Findings stacked by source, not connected by dynamics. The transmission mechanisms between forces are where the insight lives.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="problem-right reveal reveal-delay-2">
+        <div class="problem-quote">&#8220;Other services get you the documents. The transcripts. The numbers.<br><br>Then <span class="highlight">what?</span>&#8221;</div>
+        <p class="problem-attribution">The difference between information and intelligence is what happens after you have the data.</p>
+        <div class="problem-stats">
+          <div class="problem-stat">
+            <span class="num">6&#8211;8 hrs</span>
+            <span class="label">Per research piece, manually</span>
+          </div>
+          <div class="problem-stat">
+            <span class="num">$1,500+</span>
+            <span class="label">In analyst time per report</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-      // Update nav tabs
-      document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.dataset.view === viewId) {
-          tab.classList.add('active');
-        }
-      });
-    }
+<section id="difference">
+  <div class="container">
+    <div class="center-header reveal">
+      <div class="section-label">The Difference</div>
+      <div class="section-title">Summary vs. Synthesis</div>
+      <p class="section-desc">A summary is something you skim. An analysis is something you use.</p>
+    </div>
+    <div class="difference-grid reveal">
+      <div class="diff-col them">
+        <h3>AI Search Competitors</h3>
+        <div class="diff-row">
+          <div class="dim">Prompt Construction</div>
+          <p>User types a freeform question into a chat box. Output quality depends entirely on how they phrase it.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Processing</div>
+          <p>RAG + generic model call. No analytical framework applied. Model routing selects which LLM handles the request.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Output</div>
+          <p>Several paragraphs of summarized information. Two users asking the same question get different quality results.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Source Discipline</div>
+          <p>Thousands of sources parsed through. Quantity over verifiability. No recency constraint.</p>
+        </div>
+      </div>
+      <div class="diff-col us">
+        <h3>MarketLens</h3>
+        <div class="diff-row">
+          <div class="dim">Prompt Construction</div>
+          <p>Structured UI guides the user through frameworks, scope, and analytical focus. The system engineers the prompt.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Processing</div>
+          <p>40+ financial frameworks drive multi-step analytical reasoning. Matrix decomposition, gap analysis, and resynthesis.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Output</div>
+          <p>Multi-page structured analytical report. Framework standardization ensures consistent depth regardless of phrasing.</p>
+        </div>
+        <div class="diff-row">
+          <div class="dim">Source Discipline</div>
+          <p>20+ verified sources per report. Full URLs, recency-constrained, architecturally impossible to fabricate citations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Nav tab click handlers
-    document.querySelectorAll('.nav-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        switchView(this.dataset.view);
-      });
+<section class="showcase" id="output">
+  <div class="container">
+    <div class="showcase-header reveal">
+      <div class="section-label">The Output</div>
+      <div class="section-title">Institutional-Grade Research</div>
+      <p class="section-desc">Recession risk analysis. 28 sources. 11 pages. Compiled in minutes.</p>
+    </div>
+    <div class="showcase-browser reveal">
+      <div class="browser-bar">
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+      </div>
+      <div class="showcase-slides">
+        <div class="showcase-slide active">
+          <img src="https://i.imgur.com/LDxtPUC.png" alt="MarketLens Research Document">
+        </div>
+        <div class="showcase-slide">
+          <img src="https://i.imgur.com/HGDXF0A.png" alt="MarketLens Portfolio Analysis">
+        </div>
+        <div class="showcase-slide">
+          <img src="https://i.imgur.com/ZPfo7MA.png" alt="MarketLens Synthesis View">
+        </div>
+      </div>
+    </div>
+    <div class="showcase-dots reveal">
+      <span class="showcase-dot active" data-slide="0"></span>
+      <span class="showcase-dot" data-slide="1"></span>
+      <span class="showcase-dot" data-slide="2"></span>
+    </div>
+    <div class="showcase-captions reveal">
+      <div class="cap active">Structured research with MLA citations and full source bibliography</div>
+      <div class="cap">Cross-sector dynamics with ecosystem linkage analysis</div>
+      <div class="cap">Integrated synthesis connecting transmission mechanisms across dimensions</div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <div class="container">
+    <div class="center-header reveal">
+      <div class="section-label">How It Works</div>
+      <div class="section-title">Guide the Analysis. Define the Scope.</div>
+      <p class="section-desc">MarketLens does not start with search. It starts with analytical framing, configurable by you and executed by the system.</p>
+    </div>
+    <div class="process-steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <h3>Choose Your Lens</h3>
+        <p>40+ analytical frameworks: ecosystem mapping, competitive positioning, risk assessment, scenario modeling, DCF valuations. The lens reshapes how the system thinks about your question.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <h3>Define Parameters</h3>
+        <p>Set scope, depth, and perspective. The structured UI engineers the analytical frame. No prompt engineering required. Same question, different lens, categorically different research.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <h3>Get Intelligence</h3>
+        <p>Matrix decomposition, source-disciplined search, self-directed gap analysis, and integrated resynthesis. 20+ verified sources. Every claim cited. Every link functional. Ready to export.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="proof" id="proof">
+  <div class="container">
+    <div class="proof-header reveal">
+      <div class="section-label">The Evidence</div>
+      <div class="section-title">Built for Real Financial Research</div>
+      <p class="section-desc">Not a demo. Not a prototype. Production output from a production platform.</p>
+    </div>
+    <div class="proof-metrics reveal">
+      <div class="metric">
+        <span class="num">~10 min</span>
+        <h4>Generation Time</h4>
+        <p>What takes an analyst 6 to 8 hours, delivered in minutes. Repeatable for any topic.</p>
+      </div>
+      <div class="metric">
+        <span class="num">20+</span>
+        <h4>Verified Sources</h4>
+        <p>Authoritative sources per report. Fed, IMF, Bloomberg, Goldman, SEC filings. No blogs. No Reddit.</p>
+      </div>
+      <div class="metric">
+        <span class="num">40+</span>
+        <h4>Research Frameworks</h4>
+        <p>SWOT, Porter's 5 Forces, ecosystem mapping, scenario modeling, narrative analysis. Your lens, your output.</p>
+      </div>
+      <div class="metric">
+        <span class="num">100%</span>
+        <h4>Cited and Verifiable</h4>
+        <p>Every claim links to its source. Architecturally impossible to fabricate citations or produce dead links.</p>
+      </div>
+    </div>
+    <div class="comparison-table reveal">
+      <div class="comp-header">
+        <div>Dimension</div>
+        <div>Human Analyst</div>
+        <div>MarketLens</div>
+      </div>
+      <div class="comp-row">
+        <div>Time</div>
+        <div>6 to 8 hours</div>
+        <div>~10 minutes</div>
+      </div>
+      <div class="comp-row">
+        <div>Cost</div>
+        <div>$500 to $1,500+</div>
+        <div>$2 to $3</div>
+      </div>
+      <div class="comp-row">
+        <div>Decomposition</div>
+        <div>Intuitive, variable</div>
+        <div>Systematic, consistent</div>
+      </div>
+      <div class="comp-row">
+        <div>Source Verification</div>
+        <div>Manual, partial</div>
+        <div>Architectural, complete</div>
+      </div>
+      <div class="comp-row">
+        <div>Gap Analysis</div>
+        <div>None (intuition-based)</div>
+        <div>Self-directed, matrix-audited</div>
+      </div>
+      <div class="comp-row">
+        <div>Consistency</div>
+        <div>Degrades with fatigue</div>
+        <div>Identical on query 10,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ethos">
+  <div class="container reveal">
+    <div class="section-label" style="text-align:center">Our Ethos</div>
+    <div class="ethos-quote">The market for AI search is crowded.<br>The market for <span class="gradient">AI analysis</span> is wide open.</div>
+    <p class="ethos-sub">Grounded in fundamentals. Built by finance industry veterans. Designed to turn isolated data into connected understanding, and connected understanding into confident decisions.</p>
+  </div>
+</section>
+
+<section class="final-cta" id="get-started">
+  <div class="container reveal">
+    <div class="section-label">Get Started</div>
+    <div class="section-title">Ready to Research Smarter?</div>
+    <p class="section-desc">Create your first institutional-grade report in minutes.</p>
+    <a href="#" class="btn btn-primary">Start Free Trial</a>
+    <p class="cta-sub">No credit card required &#183; Full platform access &#183; Export and share reports</p>
+    <div class="trust-row">
+      <span>Independent RIAs</span>
+      <span>Family Offices</span>
+      <span>Investment Advisors</span>
+      <span>Research Teams</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-left">&#169; 2025 Vertesia. All rights reserved.</div>
+  <div class="footer-right">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var h=document.getElementById('header');
+  window.addEventListener('scroll',function(){h.classList.toggle('scrolled',window.scrollY>40)},{passive:true});
+
+  var r=document.querySelectorAll('.reveal');
+  var o=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');o.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  r.forEach(function(el){o.observe(el)});
+
+  var slides=document.querySelectorAll('.showcase-slide');
+  var dots=document.querySelectorAll('.showcase-dot');
+  var caps=document.querySelectorAll('.cap');
+  var cur=0;
+  var auto;
+
+  function show(i){
+    slides.forEach(function(s){s.classList.remove('active')});
+    dots.forEach(function(d){d.classList.remove('active')});
+    caps.forEach(function(c){c.classList.remove('active')});
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
+    caps[i].classList.add('active');
+    cur=i;
+  }
+
+  function next(){show((cur+1)%slides.length)}
+
+  dots.forEach(function(d){d.addEventListener('click',function(){
+    show(parseInt(this.dataset.slide));
+    clearInterval(auto);
+    auto=setInterval(next,6000);
+  })});
+
+  auto=setInterval(next,6000);
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var t=document.querySelector(this.getAttribute('href'));
+      if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
     });
-
-    // Carousel functionality (Overview page)
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.hero-slide');
-    const indicators = document.querySelectorAll('.indicator');
-    const totalSlides = slides.length;
-    let autoRotateInterval;
-
-    function showSlide(index) {
-      // Remove active class from all slides and indicators
-      slides.forEach(slide => slide.classList.remove('active'));
-      indicators.forEach(indicator => indicator.classList.remove('active'));
-      
-      // Add active class to current slide and indicator
-      slides[index].classList.add('active');
-      indicators[index].classList.add('active');
-      
-      currentSlide = index;
-    }
-
-    function nextSlide() {
-      let next = (currentSlide + 1) % totalSlides;
-      showSlide(next);
-    }
-
-    function goToSlide(index) {
-      showSlide(index);
-      // Reset auto-rotation timer when manually changing slides
-      clearInterval(autoRotateInterval);
-      autoRotateInterval = setInterval(nextSlide, 5000);
-    }
-
-    // Auto-rotate every 5 seconds
-    autoRotateInterval = setInterval(nextSlide, 5000);
-
-    // Pause auto-rotation when hovering over carousel
-    const carousel = document.querySelector('.hero-carousel');
-    if (carousel) {
-      carousel.addEventListener('mouseenter', () => {
-        clearInterval(autoRotateInterval);
-      });
-      
-      carousel.addEventListener('mouseleave', () => {
-        autoRotateInterval = setInterval(nextSlide, 5000);
-      });
-    }
-
-    // Screenshot carousel functionality (Output page)
-    let currentScreenshot = 0;
-    const screenshotSlides = document.querySelectorAll('.screenshot-slide');
-    const screenshotIndicators = document.querySelectorAll('.screenshot-indicator');
-    const totalScreenshots = screenshotSlides.length;
-
-    function showScreenshot(index) {
-      // Wrap around
-      if (index >= totalScreenshots) index = 0;
-      if (index < 0) index = totalScreenshots - 1;
-      
-      // Remove active class from all
-      screenshotSlides.forEach(slide => slide.classList.remove('active'));
-      screenshotIndicators.forEach(indicator => indicator.classList.remove('active'));
-      
-      // Add active class to current
-      screenshotSlides[index].classList.add('active');
-      screenshotIndicators[index].classList.add('active');
-      
-      currentScreenshot = index;
-    }
-
-    function changeScreenshot(direction) {
-      showScreenshot(currentScreenshot + direction);
-    }
-
-    function goToScreenshot(index) {
-      showScreenshot(index);
-    }
-  </script>
-
+  });
+})();
+</script>
 </body>
 </html>
