@@ -1,405 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MarketLens - AI That Thinks</title>
-  <meta name="description" content="Institutional-grade financial research in minutes.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --bg:#f4efe6;--bg-warm:#ebe5d9;--bg-card:#ffffff;--bg-dark:#1a2e2e;--bg-dark-el:#1f3636;
-      --border:rgba(26,46,46,0.08);--text:#1a2e2e;--text-2:rgba(26,46,46,0.55);--text-3:rgba(26,46,46,0.3);
-      --td:#f4efe6;--td2:rgba(244,239,230,0.6);--td3:rgba(244,239,230,0.35);
-      --teal:#1e6b6b;--teal-lt:#2a8a8a;--teal-soft:rgba(30,107,107,0.06);--gold:#c4993c;
-      --serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-      --ease:cubic-bezier(0.16,1,0.3,1);
-    }
-    html,body{height:100%;overflow:hidden}
-    body{font-family:var(--sans);color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.6}
-    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
-
-    /* HEADER */
-    .hdr{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,4vw,60px)}
-    .hdr::before{content:'';position:absolute;inset:0;background:var(--bg-dark)}
-    .hdr>*{position:relative;z-index:1}
-    .logo{display:flex;align-items:center;gap:12px}
-    .logo-i{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2a8a8a,#1e6b6b,#165555);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:white;box-shadow:0 2px 10px rgba(30,107,107,0.3)}
-    .logo-w{font-size:17px;font-weight:600;letter-spacing:-0.3px;color:var(--td)}
-    .logo-s{font-size:8px;text-transform:uppercase;letter-spacing:2.5px;color:var(--td3);font-weight:500}
-    .hdr-nav{display:flex;align-items:center;gap:32px}
-    .hdr-nav a{font-size:12.5px;font-weight:500;color:var(--td2);text-decoration:none;transition:color 0.4s}
-    .hdr-nav a:hover{color:var(--td)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:600;border:none;cursor:pointer;transition:all 0.5s var(--ease);text-decoration:none}
-    .btn-p{background:var(--teal);color:white;padding:9px 22px;border-radius:100px;font-size:12.5px;box-shadow:0 2px 10px rgba(30,107,107,0.2)}
-    .btn-p:hover{background:var(--teal-lt);transform:translateY(-1px)}
-    .btn-s{background:rgba(26,46,46,0.05);color:var(--text);padding:9px 22px;border-radius:100px;font-size:12.5px;border:1px solid var(--border)}
-    .btn-s:hover{background:rgba(26,46,46,0.08)}
-
-    /* SLIDES */
-    .slides{position:fixed;top:60px;left:0;right:0;bottom:0;overflow:hidden}
-    .sl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(24px,4vh,48px) clamp(32px,6vw,100px);opacity:0;transform:translateY(50px);transition:opacity 0.75s var(--ease),transform 0.75s var(--ease);pointer-events:none;will-change:transform,opacity}
-    .sl.active{opacity:1;transform:translateY(0);pointer-events:all}
-    .sl.exit-up{opacity:0;transform:translateY(-50px)}
-    .sl-in{width:100%;max-width:1080px;margin:0 auto}
-    .sl--l{background:var(--bg)}.sl--w{background:var(--bg-warm)}.sl--d{background:var(--bg-dark);color:var(--td)}
-
-    /* NAV */
-    .ndots{position:fixed;right:clamp(14px,2vw,28px);top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:10px}
-    .nd{width:6px;height:6px;border-radius:50%;background:rgba(26,46,46,0.12);cursor:pointer;transition:all 0.5s var(--ease);border:none;padding:0}
-    .nd:hover{background:rgba(26,46,46,0.25)}
-    .nd.active{background:var(--teal);height:22px;border-radius:100px}
-    .nd.dk{background:rgba(244,239,230,0.12)}.nd.dk:hover{background:rgba(244,239,230,0.25)}.nd.dk.active{background:var(--gold)}
-    .sarr{position:fixed;bottom:clamp(12px,2.5vh,24px);left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:14px}
-    .sa{width:36px;height:36px;border-radius:50%;background:rgba(26,46,46,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.4s var(--ease);color:var(--text-3);font-size:15px;padding:0}
-    .sa:hover{background:rgba(26,46,46,0.1);color:var(--text)}
-    .sa.off{opacity:0.15;pointer-events:none}
-    .sc{font-size:10px;color:var(--text-3);font-weight:500;letter-spacing:1px;min-width:40px;text-align:center;font-variant-numeric:tabular-nums}
-
-    /* SHARED */
-    .lbl{font-size:10px;text-transform:uppercase;letter-spacing:3px;font-weight:600;margin-bottom:12px}
-    .lbl-t{color:var(--teal)}.lbl-g{color:var(--gold)}
-
-    /* === 0: HERO === */
-    .hero{display:flex;flex-direction:column;align-items:center;text-align:center}
-    .hero h1{font-family:var(--serif);font-size:clamp(36px,5.5vw,68px);font-weight:400;line-height:1.08;letter-spacing:-1.2px;max-width:760px;margin-bottom:20px}
-    .hero h1 em{font-style:italic;color:var(--teal)}
-    .hero-sub{font-size:clamp(15px,1.5vw,17px);color:var(--text-2);max-width:420px;line-height:1.7;margin-bottom:36px}
-    .hero-ctas{display:flex;gap:12px}
-    .hero-ctas .btn-p{padding:13px 34px;font-size:14px}
-    .hero-ctas .btn-s{padding:13px 30px;font-size:14px}
-
-    /* === 1: PROBLEM === */
-    .prob{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,80px);align-items:center}
-    .prob-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:400;line-height:1.1;letter-spacing:-0.6px;margin-bottom:12px}
-    .prob-desc{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:24px;max-width:440px}
-    .prob-items{display:flex;flex-direction:column;gap:16px}
-    .prob-item{display:flex;gap:14px;align-items:flex-start}
-    .prob-mk{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0;box-shadow:0 0 10px rgba(196,153,60,0.3)}
-    .prob-item h4{font-size:13px;font-weight:600;margin-bottom:2px}
-    .prob-item p{font-size:12.5px;color:var(--text-2);line-height:1.65}
-    .prob-r{}
-    .prob-pq{font-family:var(--serif);font-size:clamp(20px,2.4vw,30px);font-weight:400;line-height:1.3;letter-spacing:-0.2px;margin-bottom:14px}
-    .prob-pq .hl{color:var(--teal)}
-    .prob-ps{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:28px}
-    .prob-stats{display:flex;gap:14px}
-    .pst{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.03)}
-    .pst .num{font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;display:block}
-    .pst .lbl2{font-size:10px;color:var(--text-2);margin-top:6px;line-height:1.4}
-
-    /* === 2: DIFFERENCE === */
-    .diff{text-align:center}
-    .diff-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:400;line-height:1.1;letter-spacing:-0.6px;margin-bottom:6px}
-    .diff-sub{font-size:13px;color:var(--text-2);margin-bottom:24px}
-    .dtbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg-card);text-align:left;box-shadow:0 1px 8px rgba(0,0,0,0.03)}
-    .dtbl thead th{padding:12px 16px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:2px;background:rgba(26,46,46,0.03);border-bottom:1px solid var(--border)}
-    .dtbl thead th:first-child{color:var(--text-3);width:80px}
-    .dtbl thead th:nth-child(2){color:var(--text-3)}
-    .dtbl thead th:nth-child(3){color:var(--teal)}
-    .dtbl td{padding:11px 16px;font-size:13px;color:var(--text-2);border-bottom:1px solid rgba(26,46,46,0.04);line-height:1.5;vertical-align:top}
-    .dtbl tr:last-child td{border-bottom:none}
-    .dtbl td:first-child{font-weight:600;color:var(--text);font-size:10px;text-transform:uppercase;letter-spacing:1px}
-    .dtbl td:nth-child(3){color:var(--text)}
-
-    /* === 3: SHOWCASE === */
-    .show{display:flex;flex-direction:column;align-items:center;text-align:center}
-    .show-hd{margin-bottom:16px}
-    .show-hd h2{font-family:var(--serif);font-size:clamp(26px,3.5vw,42px);font-weight:400;line-height:1.1;letter-spacing:-0.5px;color:var(--td);margin-bottom:4px}
-    .show-hd p{font-size:13px;color:var(--td2)}
-    .show-fr{width:100%;max-width:860px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);box-shadow:0 24px 60px rgba(0,0,0,0.25)}
-    .show-bar{height:32px;background:rgba(26,46,46,0.9);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;padding:0 12px;gap:6px}
-    .show-bar span{width:8px;height:8px;border-radius:50%}
-    .show-bar span:nth-child(1){background:rgba(255,95,87,0.6)}
-    .show-bar span:nth-child(2){background:rgba(253,188,64,0.6)}
-    .show-bar span:nth-child(3){background:rgba(40,201,64,0.6)}
-    .show-vp{background:var(--bg-dark);overflow:hidden}
-    .show-img{display:none;width:100%}.show-img.active{display:block}
-    .show-img img{width:100%;height:auto;display:block}
-    .show-dots{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px}
-    .scd{width:6px;height:6px;border-radius:50%;background:rgba(244,239,230,0.2);cursor:pointer;transition:all 0.5s var(--ease);border:none;padding:0}
-    .scd.active{background:var(--gold);width:22px;border-radius:100px}
-    .show-cap{font-size:11px;color:var(--td2);margin-top:8px;min-height:16px}
-    .show-cap span{display:none}.show-cap span.active{display:inline}
-
-    /* === 4: PROCESS === */
-    .proc{text-align:center}
-    .proc-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:400;line-height:1.1;letter-spacing:-0.6px;margin-bottom:6px}
-    .proc-sub{font-size:13px;color:var(--text-2);margin-bottom:28px}
-    .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:left}
-    .pcard{padding:28px 22px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,0.03)}
-    .pcard-n{font-family:var(--serif);font-size:40px;color:var(--teal);line-height:1;margin-bottom:12px;opacity:0.25}
-    .pcard h3{font-size:15px;font-weight:600;margin-bottom:6px;letter-spacing:-0.2px}
-    .pcard p{font-size:12.5px;color:var(--text-2);line-height:1.7}
-
-    /* === 5: PROOF === */
-    .proof{text-align:center}
-    .proof-title{font-family:var(--serif);font-size:clamp(26px,3vw,40px);font-weight:400;line-height:1.1;letter-spacing:-0.5px;color:var(--td);margin-bottom:6px}
-    .proof-sub{font-size:13px;color:var(--td2);margin-bottom:20px}
-    .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-    .mcard{padding:20px 12px;background:var(--bg-dark-el);border:1px solid rgba(255,255,255,0.04);border-radius:12px}
-    .mcard .val{font-family:var(--serif);font-size:30px;color:var(--gold);line-height:1;display:block}
-    .mcard h4{font-size:11px;font-weight:600;margin-top:8px;margin-bottom:4px;color:var(--td)}
-    .mcard p{font-size:10px;color:var(--td2);line-height:1.45}
-    .ctbl{max-width:640px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);text-align:left}
-    .ctbl .ch{display:grid;grid-template-columns:1.3fr 1fr 1fr;background:var(--bg-dark-el);border-bottom:1px solid rgba(255,255,255,0.04)}
-    .ctbl .ch div{padding:10px 14px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--td3)}
-    .ctbl .ch div:nth-child(3){color:var(--gold)}
-    .ctbl .cr{display:grid;grid-template-columns:1.3fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,0.04)}
-    .ctbl .cr:last-child{border-bottom:none}
-    .ctbl .cr div{padding:9px 14px;font-size:12px;color:var(--td2);line-height:1.35}
-    .ctbl .cr div:first-child{font-weight:600;color:var(--td)}
-
-    /* === 6: ETHOS === */
-    .ethos{display:flex;flex-direction:column;align-items:center;text-align:center}
-    .ethos-q{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.2;letter-spacing:-0.5px;max-width:680px;margin-bottom:20px}
-    .ethos-q em{font-style:italic;color:var(--teal)}
-    .ethos-sub{font-size:15px;color:var(--text-2);max-width:460px;line-height:1.75}
-
-    /* === 7: CTA === */
-    .cta{display:flex;flex-direction:column;align-items:center;text-align:center}
-    .cta-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);font-weight:400;line-height:1.1;letter-spacing:-0.6px;margin-bottom:12px}
-    .cta-desc{font-size:15px;color:var(--text-2);max-width:380px;line-height:1.7;margin-bottom:32px}
-    .cta .btn-p{padding:15px 40px;font-size:15px;box-shadow:0 6px 28px rgba(30,107,107,0.2)}
-    .cta-fine{font-size:11px;color:var(--text-3);margin-top:14px}
-    .trust{display:flex;gap:36px;justify-content:center;margin-top:40px;flex-wrap:wrap}
-    .trust span{font-size:10px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:1.5px}
-
-    /* RESPONSIVE */
-    @media(max-width:1024px){
-      .prob{grid-template-columns:1fr;gap:32px}
-      .pgrid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
-      .mgrid{grid-template-columns:1fr 1fr}
-      .ndots{display:none}
-    }
-    @media(max-width:768px){
-      .hdr-nav a:not(.btn){display:none}
-      .hero-ctas{flex-direction:column;width:100%;max-width:250px}
-      .hero-ctas .btn{width:100%}
-      .prob-stats{flex-direction:column;gap:10px}
-      .dtbl td,.dtbl th{padding:8px 10px;font-size:11px}
-      .mgrid{gap:8px}.mcard{padding:14px 10px}.mcard .val{font-size:24px}
-      .ctbl .ch div,.ctbl .cr div{padding:8px 10px;font-size:10px}
-      .trust{flex-direction:column;gap:8px}
-      .sl{padding:clamp(16px,3vh,32px) clamp(16px,4vw,40px)}
-    }
-    ::selection{background:rgba(30,107,107,0.2)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MarketLens</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;}
+body{background:#fffff8;color:#1a1a18;font-family:"EB Garamond",Georgia,serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.col{max-width:500px;margin:0 auto;padding:0 clamp(24px,6vw,40px)}
+.open{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0 clamp(24px,8vw,80px)}
+.open h1{font-size:clamp(30px,5.6vw,72px);font-weight:400;line-height:1.08;letter-spacing:-1.5px;max-width:900px}
+.open h1 em{font-style:italic}
+.drop{padding:8vh 0 0;text-align:left}
+.drop p{font-size:clamp(16px,2vw,22px);font-weight:400;line-height:1.5;color:#1a1a18}.section-label{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:clamp(12px,1.2vw,14px);text-transform:uppercase;letter-spacing:1.6px;color:#151e1e;font-weight:600;margin-bottom:8vh;display:block}
+p{font-size:clamp(14px,1.44vw,16px);line-height:1.8;color:#3a3a38}
+p+p{margin-top:1.5em}
+.big{font-size:clamp(19px,2.8vw,34px);line-height:1.3;letter-spacing:-.3px;color:#1a1a18;font-weight:400;padding:10vh 0}
+.big em{font-style:italic}
+hr{border:none;height:1px;background:#e0e0d8;margin:0}
+section{padding:8vh 0 12vh}
+.stat-break{padding:14vh clamp(24px,8vw,80px);text-align:center}
+.stat-break .n{font-size:clamp(51px,9.6vw,112px);font-weight:400;line-height:1;letter-spacing:-3px;color:#151e1e}
+.stat-break .n span{font-size:clamp(20px,3vw,36px);color:#8a8a82;font-weight:400;letter-spacing:0;display:block;margin-top:1vh}
+.detail{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;color:#a0a098;line-height:1.8;letter-spacing:.3px}
+.not-list{padding:8vh 0}
+.not-list p{font-size:clamp(12px,1.2vw,14px);color:#a0a098;border-left:1px solid rgba(208,160,64,.25);padding-left:20px;margin-bottom:3vh}
+.not-list p b{color:#e8e4db;font-weight:600}
+.end{padding:6vh 0 12vh;text-align:center}
+.end p{font-size:clamp(20px,3vw,32px);font-weight:400;margin-bottom:4vh;color:#1a1a18}
+.go{display:inline-block;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;font-weight:600;color:white;background:#151e1e;text-decoration:none;padding:13px 38px;border-radius:100px;transition:all .4s ease;box-shadow:0 2px 12px rgba(21,30,30,.15)}
+.go:hover{transform:translateY(-2px);box-shadow:0 4px 24px rgba(21,30,30,.25)}
+.after{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;color:#a0a098;margin-top:2vh;letter-spacing:.3px}
+.dark{background:#151e1e;color:#e8e4db;padding:6vh 0;margin:0}
+.dark .col{max-width:500px;margin:0 auto;padding:0 clamp(24px,6vw,40px)}
+.dark p{color:#a0a098}
+.dark .accent{color:#e8e4db;font-size:clamp(12px,1.2vw,14px);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8vh;display:block}
+.v{opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease}
+.v.on{opacity:1;transform:none}
+.v2{transition-delay:.15s}
+.v3{transition-delay:.3s}
+.mark-wrap{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:6vh}.mark-logo{width:clamp(52px,7vw,80px);height:auto;opacity:.55}
+.mark{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:clamp(18px,3vw,26px);font-weight:600;letter-spacing:8px;text-transform:uppercase;color:#1a1a18;opacity:.55;margin-bottom:0}
+.contact{position:fixed;top:20px;right:clamp(20px,4vw,48px);z-index:200;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:10px;font-weight:500;letter-spacing:.5px;color:#1a1a18;opacity:.45;text-decoration:none;transition:opacity .3s ease}.contact:hover{opacity:1}.contact.light{color:#e8e4db}
+.email-link{display:block;margin-top:3vh;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:10px;color:#1a1a18;opacity:.15;text-decoration:none;letter-spacing:.3px;transition:opacity .3s ease}.email-link:hover{opacity:.6}
+.foot.light{color:#e8e4db}
+.foot{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:12px clamp(24px,6vw,40px);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:9px;color:#1a1a18;opacity:.2;letter-spacing:.3px;z-index:200}
+::selection{background:rgba(21,30,30,.1)}
+@media(max-width:600px){.stat-break .n{letter-spacing:-1px}}
+</style>
 </head>
 <body>
+<a href="mailto:MarketLens.info@doculabs.com?subject=MarketLens%20Demo%20Request&body=Hi%20MarketLens%20team%2C%0A%0AI%E2%80%99d%20love%20to%20see%20a%20demo%20of%20MarketLens.%20Could%20we%20set%20up%20a%20time%20to%20walk%20through%20the%20platform%3F%0A%0AThanks" class="contact">Contact Us</a>
 
-<header class="hdr">
-  <div class="logo">
-    <div class="logo-i">M</div>
-    <div><div class="logo-w">MarketLens</div><div class="logo-s">by Vertesia</div></div>
-  </div>
-  <nav class="hdr-nav">
-    <a href="#" data-goto="4">How It Works</a>
-    <a href="#" data-goto="3">Output</a>
-    <a href="#" data-goto="5">Evidence</a>
-    <a href="#" data-goto="7" class="btn btn-p">Start Free Trial</a>
-  </nav>
-</header>
+<div class="open">
+<div class="mark-wrap v"><img src="data:image/png;base64,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" class="mark-logo" alt="MarketLens"><p class="mark">MarketLens</p></div>
+</div>
 
-<div class="slides">
+<div class="col" style="padding-top:6vh;padding-bottom:18vh">
 
-  <!-- 0: HERO -->
-  <div class="sl sl--l active" data-theme="l">
-    <div class="sl-in hero">
-      <div class="lbl lbl-t">Financial Research Platform</div>
-      <h1>AI that talks is everywhere. <em>AI that thinks is MarketLens.</em></h1>
-      <p class="hero-sub">They save you a Google search. We save you an analyst. Institutional-grade research in minutes.</p>
-      <div class="hero-ctas">
-        <a href="#" data-goto="7" class="btn btn-p">Start Free Trial</a>
-        <a href="#" data-goto="3" class="btn btn-s">See Sample Output</a>
-      </div>
-    </div>
-  </div>
+<span class="section-label v">Beyond Retrieval</span>
 
-  <!-- 1: PROBLEM -->
-  <div class="sl sl--w" data-theme="l">
-    <div class="sl-in prob">
-      <div>
-        <div class="lbl lbl-t">The Problem</div>
-        <h2 class="prob-title">It was never about access to information.</h2>
-        <p class="prob-desc">The industry spent decades building bigger libraries. More subscriptions. More terminals. The bottleneck was always the analytical process between question and defensible answer.</p>
-        <div class="prob-items">
-          <div class="prob-item"><div class="prob-mk"></div><div><h4>Dimension Blindness</h4><p>No systematic decomposition. The angles you explore are the ones that occur to you. The ones you miss stay missed.</p></div></div>
-          <div class="prob-item"><div class="prob-mk"></div><div><h4>Coverage by Intuition</h4><p>No gap analysis. When it feels like enough, you stop. Coverage is a feeling, not a measurement.</p></div></div>
-          <div class="prob-item"><div class="prob-mk"></div><div><h4>Siloed Synthesis</h4><p>Findings stacked by source, not connected by dynamics. The transmission mechanisms between forces are where the insight lives.</p></div></div>
-        </div>
-      </div>
-      <div class="prob-r">
-        <div class="prob-pq">Other services get you the documents. The transcripts. The numbers. <span class="hl">Then ask you to spend hours putting the pieces together and making it fit your strategy.</span></div>
-        <p class="prob-ps">The difference between information and intelligence is what happens after you have the data.</p>
-        <div class="prob-stats">
-          <div class="pst"><span class="num">6-8 hrs</span><span class="lbl2">Per research piece, manually</span></div>
-          <div class="pst"><span class="num">$1,500+</span><span class="lbl2">In analyst time per report</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
+<p class="v">Every AI product on the market does the same thing. You type a question, it searches the web, it gives you paragraphs with footnotes. Some do it faster. Some cite better. All of them stop at exactly the point where the real work begins. And all of them bury what they produce in a conversation you’ll never find again.</p>
 
-  <!-- 2: DIFFERENCE -->
-  <div class="sl sl--l" data-theme="l">
-    <div class="sl-in diff">
-      <div class="lbl lbl-t">The Difference</div>
-      <h2 class="diff-title">Summary vs. synthesis.</h2>
-      <p class="diff-sub">A summary is something you skim. An analysis is something you use.</p>
-      <table class="dtbl">
-        <thead><tr><th>Dimension</th><th>AI Search Tools</th><th>MarketLens</th></tr></thead>
-        <tbody>
-          <tr><td>Input</td><td>Freeform chat box. Output quality depends on how you phrase it.</td><td>Structured UI with frameworks, scope, and analytical focus. The system engineers the prompt.</td></tr>
-          <tr><td>Processing</td><td>RAG plus a generic model call. No analytical framework.</td><td>40+ financial frameworks drive multi-step reasoning. Matrix decomposition, gap analysis, resynthesis.</td></tr>
-          <tr><td>Output</td><td>Paragraphs of summary. Two users get different quality.</td><td>Multi-page structured report. Consistent depth regardless of phrasing.</td></tr>
-          <tr><td>Sources</td><td>Thousands parsed. Quantity over verifiability.</td><td>20+ verified per report. Full URLs, recency-constrained. Fabrication architecturally impossible.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<p class="v">The real work is analysis. Decomposing a question into its constituent dimensions. Searching each one with source discipline. Detecting gaps in your own coverage. Searching again. Then synthesizing everything—not stacking it, <em>connecting it</em>—into a document that holds up under scrutiny.</p>
 
-  <!-- 3: SHOWCASE -->
-  <div class="sl sl--d" data-theme="d">
-    <div class="sl-in show">
-      <div class="show-hd">
-        <div class="lbl lbl-g">The Output</div>
-        <h2>See what gets delivered.</h2>
-        <p>Recession risk analysis. 28 sources. 11 pages. Compiled in minutes.</p>
-      </div>
-      <div class="show-fr">
-        <div class="show-bar"><span></span><span></span><span></span></div>
-        <div class="show-vp">
-          <div class="show-img active"><img src="https://i.imgur.com/LDxtPUC.png" alt="MarketLens Research"></div>
-          <div class="show-img"><img src="https://i.imgur.com/HGDXF0A.png" alt="MarketLens Analysis"></div>
-          <div class="show-img"><img src="https://i.imgur.com/ZPfo7MA.png" alt="MarketLens Synthesis"></div>
-        </div>
-      </div>
-      <div class="show-dots">
-        <button class="scd active" data-sc="0"></button>
-        <button class="scd" data-sc="1"></button>
-        <button class="scd" data-sc="2"></button>
-      </div>
-      <div class="show-cap">
-        <span class="active">Structured research with MLA citations and full bibliography</span>
-        <span>Cross-sector dynamics with ecosystem linkage analysis</span>
-        <span>Integrated synthesis connecting transmission mechanisms</span>
-      </div>
-    </div>
-  </div>
+<p class="v">That process takes a skilled analyst six to eight hours. It costs between five hundred and fifteen hundred dollars in labor. It degrades with fatigue. It depends on the analyst remembering to check the angles that don’t occur to them naturally.</p>
 
-  <!-- 4: PROCESS -->
-  <div class="sl sl--l" data-theme="l">
-    <div class="sl-in proc">
-      <div class="lbl lbl-t">How It Works</div>
-      <h2 class="proc-title">Guide the analysis. Define the scope.</h2>
-      <p class="proc-sub">Configurable by you, executed by the system. No prompt engineering required.</p>
-      <div class="pgrid">
-        <div class="pcard"><div class="pcard-n">01</div><h3>Choose Your Lens</h3><p>40+ analytical frameworks. Ecosystem mapping, competitive positioning, risk assessment, scenario modeling, DCF valuations. The lens reshapes how the system thinks.</p></div>
-        <div class="pcard"><div class="pcard-n">02</div><h3>Define Parameters</h3><p>Set scope, depth, and perspective. The structured UI engineers the analytical frame. Same question, different lens, categorically different research.</p></div>
-        <div class="pcard"><div class="pcard-n">03</div><h3>Get Intelligence</h3><p>Matrix decomposition, source-disciplined search, self-directed gap analysis, integrated resynthesis. 20+ verified sources. Every claim cited.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5: PROOF -->
-  <div class="sl sl--d" data-theme="d">
-    <div class="sl-in proof">
-      <div class="lbl lbl-g">The Evidence</div>
-      <h2 class="proof-title">Production output. Real results.</h2>
-      <p class="proof-sub">Not a demo. Not a prototype. This is what the platform delivers.</p>
-      <div class="mgrid">
-        <div class="mcard"><span class="val">~10m</span><h4>Generation Time</h4><p>What takes an analyst 6-8 hours, in minutes.</p></div>
-        <div class="mcard"><span class="val">20+</span><h4>Verified Sources</h4><p>Fed, IMF, Bloomberg, Goldman, SEC filings.</p></div>
-        <div class="mcard"><span class="val">40+</span><h4>Frameworks</h4><p>SWOT, Porter's Five Forces, ecosystem mapping.</p></div>
-        <div class="mcard"><span class="val">100%</span><h4>Cited & Verifiable</h4><p>Every claim traced. Fabrication impossible.</p></div>
-      </div>
-      <div class="ctbl">
-        <div class="ch"><div>Dimension</div><div>Human Analyst</div><div>MarketLens</div></div>
-        <div class="cr"><div>Time</div><div>6 to 8 hours</div><div>~10 minutes</div></div>
-        <div class="cr"><div>Cost</div><div>$500 to $1,500+</div><div>$2 to $3</div></div>
-        <div class="cr"><div>Decomposition</div><div>Intuitive, variable</div><div>Systematic, consistent</div></div>
-        <div class="cr"><div>Gap Analysis</div><div>None (intuition)</div><div>Self-directed, matrix-audited</div></div>
-        <div class="cr"><div>Consistency</div><div>Degrades with fatigue</div><div>Identical on query 10,000</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6: ETHOS -->
-  <div class="sl sl--l" data-theme="l">
-    <div class="sl-in ethos">
-      <div class="lbl lbl-t">Our Ethos</div>
-      <div class="ethos-q">The market for AI search is crowded. The market for <em>AI analysis</em> is wide open.</div>
-      <p class="ethos-sub">Grounded in fundamentals. Built by finance industry veterans. Turning isolated data into connected understanding, and connected understanding into confident decisions.</p>
-    </div>
-  </div>
-
-  <!-- 7: CTA -->
-  <div class="sl sl--w" data-theme="l">
-    <div class="sl-in cta">
-      <div class="lbl lbl-t">Get Started</div>
-      <h2 class="cta-title">Ready to research smarter?</h2>
-      <p class="cta-desc">Create your first institutional-grade report in minutes.</p>
-      <a href="#" class="btn btn-p">Start Free Trial</a>
-      <p class="cta-fine">No credit card required. Full platform access. Export and share.</p>
-      <div class="trust">
-        <span>Independent RIAs</span>
-        <span>Family Offices</span>
-        <span>Investment Advisors</span>
-        <span>Research Teams</span>
-      </div>
-    </div>
-  </div>
+<p class="v">MarketLens is the research process at your fingertips.</p>
 
 </div>
 
-<div class="ndots" id="nd"></div>
-<div class="sarr" id="sa">
-  <button class="sa off" id="prev">&#8592;</button>
-  <div class="sc" id="sc">1 / 8</div>
-  <button class="sa" id="next">&#8594;</button>
+<div class="dark">
+<div class="col">
+
+<span class="accent v">What gets delivered</span>
+
+<p class="v" style="color:#e8e4db;line-height:1.8;margin-bottom:3vh">A structured, multi-page analytical report. Named, organized, and retrievable—not buried in a chat history. A document with sections, frameworks, evidence, and citations. The kind you’d hand to a client, present to a board, or build a position on.</p>
+
+<div class="not-list v">
+<p><b>Sourcing</b> Every claim is traceable to its source. Full URLs, MLA citations, complete bibliography. Recency-constrained and fully verified.</p>
+<p><b>Frameworks</b> From Risk Assessment and Scenario Modeling to Ecosystem Mapping, Competitive Positioning, and your own custom frameworks — MarketLens generates reports tailored to what matters to you.</p>
+<p><b>Self-directed gap analysis</b> The system audits its own coverage, identifies what’s missing, and goes back for more. Your analyst doesn’t do this.</p>
+<p><b>Workspaces, not chat logs</b> Your research lives in named documents inside organized projects. Follow up on any report. Branch into new directions. Nothing gets lost in a scroll of conversations.</p>
 </div>
+
+</div>
+</div>
+
+<div class="col" style="padding-top:6vh;padding-bottom:6vh">
+
+<span class="section-label v">The Architecture</span>
+
+<p class="v">MarketLens is built by people who’ve spent their lives studying how markets work to understand the underlying dynamics that generate change. MarketLens was designed to understand more completely complex questions like how companies and industries evolve, how relationships between sectors shift, and how the uncertainty beneath a given market influences decision making.</p>
+
+<p class="v">Every research platform on the market is built to cover what’s happening. Not one of them is built to answer what you’re actually asking — how your client’s holdings could respond to a shifting macro environment, whether two companies in your portfolio provide true diversification, or where the real weaknesses are in your largest position. MarketLens doesn’t publish coverage. It runs the analysis you need, on the question you have, when you need it.</p>
+
+</div>
+
+<div class="end">
+<p class="v">Your first report is ten minutes away.</p>
+<a href="mailto:MarketLens.info@doculabs.com?subject=MarketLens%20Demo%20Request&body=Hi%20MarketLens%20team%2C%0A%0AI%E2%80%99d%20love%20to%20see%20a%20demo%20of%20MarketLens.%20Could%20we%20set%20up%20a%20time%20to%20walk%20through%20the%20platform%3F%0A%0AThanks" class="email-link v">MarketLens.info@doculabs.com</a>
+</div>
+
+<footer class="foot">
+<span>© 2025 Doculabs LLC. All rights reserved.</span>
+<span>Est. 2024</span>
+</footer>
 
 <script>
-(function(){
-  var S=document.querySelectorAll('.sl'),T=S.length,C=0,B=false,L=800;
-  var DC=document.getElementById('nd');
-  for(var i=0;i<T;i++){var d=document.createElement('button');d.className='nd'+(i===0?' active':'');d.dataset.i=i;DC.appendChild(d)}
-  var D=DC.querySelectorAll('.nd'),sc=document.getElementById('sc'),pb=document.getElementById('prev'),nb=document.getElementById('next'),sa=document.getElementById('sa');
+const vv=document.querySelectorAll(".v");
+const ob=new IntersectionObserver((ee)=>{ee.forEach(e=>{if(e.isIntersecting){e.target.classList.add("on");ob.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -60px 0px"});
+vv.forEach(v=>ob.observe(v));
 
-  function go(idx,dir){
-    if(B||idx===C||idx<0||idx>=T)return;B=true;
-    S[C].classList.remove('active');S[C].classList.add(dir==='u'?'exit-up':'exit-down');
-    S[idx].classList.remove('exit-up','exit-down');S[idx].classList.add('active');
-    D[C].classList.remove('active');D[idx].classList.add('active');
-    var dk=S[idx].dataset.theme==='d';
-    D.forEach(function(d){d.classList.toggle('dk',dk)});
-    pb.style.background=dk?'rgba(244,239,230,0.08)':'';pb.style.borderColor=dk?'rgba(244,239,230,0.1)':'';pb.style.color=dk?'rgba(244,239,230,0.6)':'';
-    nb.style.background=dk?'rgba(244,239,230,0.08)':'';nb.style.borderColor=dk?'rgba(244,239,230,0.1)':'';nb.style.color=dk?'rgba(244,239,230,0.6)':'';
-    sc.style.color=dk?'rgba(244,239,230,0.3)':'';
-    C=idx;sc.textContent=(C+1)+' / '+T;
-    pb.classList.toggle('off',C===0);nb.classList.toggle('off',C===T-1);
-    setTimeout(function(){S.forEach(function(s){if(!s.classList.contains('active'))s.classList.remove('exit-up','exit-down')});B=false},L);
+var contact=document.querySelector(".contact");
+var foot=document.querySelector(".foot");
+var dark=document.querySelector(".dark");
+function checkOverlap(){
+  if(!dark)return;
+  var dr=dark.getBoundingClientRect();
+  if(contact){
+    var cr=contact.getBoundingClientRect();
+    if(cr.top>=dr.top&&cr.bottom<=dr.bottom){contact.classList.add("light")}
+    else{contact.classList.remove("light")}
   }
-  function nx(){if(C<T-1)go(C+1,'u')}
-  function pv(){if(C>0)go(C-1,'d')}
-
-  var wa=0,wt=null;
-  window.addEventListener('wheel',function(e){e.preventDefault();wa+=e.deltaY;clearTimeout(wt);wt=setTimeout(function(){wa=0},200);if(Math.abs(wa)>50){if(wa>0)nx();else pv();wa=0}},{passive:false});
-  var ty=0;
-  window.addEventListener('touchstart',function(e){ty=e.touches[0].clientY},{passive:true});
-  window.addEventListener('touchend',function(e){var d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>50){if(d>0)nx();else pv()}},{passive:true});
-  window.addEventListener('keydown',function(e){if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();nx()}if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();pv()}});
-  pb.addEventListener('click',pv);nb.addEventListener('click',nx);
-  D.forEach(function(d){d.addEventListener('click',function(){var idx=parseInt(this.dataset.i);go(idx,idx>C?'u':'d')})});
-  document.querySelectorAll('[data-goto]').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();var idx=parseInt(this.dataset.goto);go(idx,idx>C?'u':'d')})});
-
-  var si=document.querySelectorAll('.show-img'),sd=document.querySelectorAll('.scd'),scc=document.querySelectorAll('.show-cap span'),sci=0,sct;
-  function scGo(i){si.forEach(function(s){s.classList.remove('active')});sd.forEach(function(d){d.classList.remove('active')});scc.forEach(function(c){c.classList.remove('active')});si[i].classList.add('active');sd[i].classList.add('active');scc[i].classList.add('active');sci=i}
-  sd.forEach(function(d){d.addEventListener('click',function(e){e.stopPropagation();scGo(parseInt(this.dataset.sc));clearInterval(sct);sct=setInterval(function(){scGo((sci+1)%si.length)},7000)})});
-  sct=setInterval(function(){scGo((sci+1)%si.length)},7000);
-})();
+  if(foot){
+    var fr=foot.getBoundingClientRect();
+    if(fr.top>=dr.top&&fr.bottom<=dr.bottom){foot.classList.add("light")}
+    else{foot.classList.remove("light")}
+  }
+}
+window.addEventListener("scroll",checkOverlap,{passive:true});
+checkOverlap();
 </script>
 </body>
 </html>
