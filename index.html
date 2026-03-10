@@ -11,9 +11,9 @@ html{scroll-behavior:smooth}
 body{background:#fffff8;color:#1a1a18;font-family:"EB Garamond",Georgia,serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 .col{max-width:600px;margin:0 auto;padding:0 clamp(24px,6vw,40px)}
 .open{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0 clamp(24px,8vw,80px);position:relative}
-.scroll-hint{position:absolute;bottom:clamp(24px,4vh,48px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .6s ease}
-.scroll-hint.on{opacity:.3}
-.scroll-hint svg{width:22px;height:22px;stroke:#1a1a18;stroke-width:1.5;fill:none;animation:float 3s ease-in-out infinite}
+.scroll-hint{position:absolute;bottom:clamp(24px,4vh,48px);left:50%;transform:translateX(-50%);opacity:0;animation:hintIn 1s ease 1.5s forwards}
+.scroll-hint svg{width:36px;height:36px;stroke:#2a5a3a;stroke-width:2;fill:none;animation:float 3s ease-in-out infinite}
+@keyframes hintIn{to{opacity:.5}}
 @keyframes float{0%{transform:translateY(0);opacity:1}50%{transform:translateY(8px);opacity:.4}100%{transform:translateY(0);opacity:1}}
 .section-label{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:clamp(12px,1.2vw,14px);text-transform:uppercase;letter-spacing:1.6px;color:#151e1e;font-weight:600;margin-bottom:8vh;display:block}
 p{font-size:clamp(17px,1.6vw,20px);line-height:1.8;color:#3a3a38}
@@ -56,7 +56,7 @@ p+p{margin-top:1.5em}
 <p class="mark">MarketLens</p>
 <p class="mark-sub">Financial Research Platform</p>
 </div>
-<div class="scroll-hint v"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+<div class="scroll-hint"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
 </div>
 
 <div class="col" style="padding-top:6vh;padding-bottom:18vh">
@@ -104,9 +104,11 @@ p+p{margin-top:1.5em}
 
 <span class="accent v">The Architecture</span>
 
-<p class="v">MarketLens is built by people who&#8217;ve spent their lives studying how markets work to understand the underlying dynamics that generate change. It was designed to engage deeply with complex questions.</p>
+<p class="v">MarketLens is built by people who&#8217;ve spent their lives studying how markets work to understand the underlying dynamics that generate change. It is designed to engage deeply with complex questions.</p>
 
-<p class="v">Every research platform on the market is built to cover what&#8217;s happening. Not one of them is built to answer what you&#8217;re actually asking: how your client&#8217;s holdings could respond to a shifting macro environment, whether two holdings in your portfolio provide true diversification, or where the real weaknesses are in your composition. MarketLens doesn&#8217;t publish coverage. It runs the analysis you need, on the question you have, at the moment you need it.</p>
+<p class="v">Every research platform on the market is built to cover what&#8217;s happening. Not one of them is built to answer what you&#8217;re actually asking: how your client&#8217;s holdings could respond to a shifting macro environment, whether two holdings in your portfolio provide true diversification, or where the real weaknesses are in your composition.</p>
+
+<p class="v">MarketLens doesn&#8217;t publish coverage. It runs the analysis you need, on the question you have, at the moment you need it.</p>
 
 </div>
 </div>
@@ -128,10 +130,12 @@ const ob=new IntersectionObserver((ee)=>{ee.forEach(e=>{if(e.isIntersecting){e.t
 vv.forEach(v=>ob.observe(v));
 
 var hint=document.querySelector(".scroll-hint");
+var hintReady=false;
+setTimeout(function(){hintReady=true},2600);
 function checkScroll(){
-  if(hint){
+  if(hint&&hintReady){
     var fade=Math.max(0, 1 - window.scrollY / 300);
-    hint.style.opacity = fade * 0.3;
+    hint.style.opacity = fade * 0.5;
     if(fade===0) hint.style.pointerEvents="none";
   }
 }
